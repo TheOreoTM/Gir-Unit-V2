@@ -1,13 +1,12 @@
 import { SapphireClient } from '@sapphire/framework';
 import { GatewayIntentBits } from 'discord.js';
+require('dotenv').config();
 
 const client = new SapphireClient({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  defaultPrefix: '>',
+  disableMentionPrefix: false,
+  loadMessageCommandListeners: true,
 });
-require('dotenv').config();
 
 client.login(process.env.TOKEN);
