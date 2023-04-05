@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 export async function connectToMongo(URI: string) {
   mongoose.set('strictQuery', true);
   await mongoose

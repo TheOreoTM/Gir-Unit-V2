@@ -4,7 +4,13 @@
     // "ignoreDeprecations": "5.0",
     "rootDir": "src",
     "outDir": "dist",
-    "tsBuildInfoFile": "dist/.tsbuildinfo"
+    "baseUrl": "src/.",
+    "skipLibCheck": true,
+    "paths": {
+      "#constants": ["lib/utility/constants.ts"],
+      "#lib/*": ["lib/*"],
+      "#root/*": ["*"]
+    }
   },
   "include": ["src"]
 }

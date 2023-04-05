@@ -1,6 +1,6 @@
-import { SapphireClient } from '@sapphire/framework';
-import { GatewayIntentBits } from 'discord.js';
-import { connectToMongo } from './functions/Bot';
+import { LogLevel, SapphireClient } from '@sapphire/framework';
+import { GatewayIntentBits, Partials } from 'discord.js';
+import { connectToMongo } from './lib/utility/functions/connectToMongo';
 require('dotenv').config();
 
 const client = new SapphireClient({
@@ -9,10 +9,11 @@ const client = new SapphireClient({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
   ],
+  partials: [Partials.Channel],
 
-  // logger: {
-  //   level: LogLevel.Trace
-  // },
+  logger: {
+    level: LogLevel.Debug,
+  },
 
   defaultPrefix: '>',
   disableMentionPrefix: false,
@@ -21,7 +22,7 @@ const client = new SapphireClient({
   caseInsensitivePrefixes: true,
   enableLoaderTraceLoggings: true,
   loadDefaultErrorListeners: true,
-  typing: true,
+  // typing: true,
 });
 
 client.on('ready', async () => {

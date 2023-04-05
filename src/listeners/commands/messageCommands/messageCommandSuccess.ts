@@ -1,3 +1,4 @@
+import { logSuccessCommand } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import {
   Events,
@@ -6,13 +7,13 @@ import {
   MessageCommandSuccessPayload,
 } from '@sapphire/framework';
 import type { Logger } from '@sapphire/plugin-logger';
-import { logSuccessCommand } from '../../../lib/utils';
 
 @ApplyOptions<Listener.Options>({
   event: Events.MessageCommandAccepted,
 })
-export class UserEvent extends Listener<typeof Events.MessageCommandSuccess> {
+export class UserEvent extends Listener {
   public run(payload: MessageCommandSuccessPayload) {
+    this.container.logger.debug('bruh');
     logSuccessCommand(payload);
   }
 

@@ -1,3 +1,4 @@
+import { sec } from '#lib/utility';
 import { Command } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 
@@ -8,7 +9,7 @@ export class PingCommand extends Command {
       name: 'ping',
       aliases: ['pong'],
       description: 'ping pong',
-      cooldownDelay: 7_000,
+      cooldownDelay: sec(10),
       cooldownLimit: 1,
     });
   }
