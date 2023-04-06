@@ -1,4 +1,4 @@
-import { Owners } from '#constants';
+import { Owners } from '#config';
 import { Precondition } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 

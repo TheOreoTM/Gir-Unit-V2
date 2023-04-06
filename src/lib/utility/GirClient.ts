@@ -1,9 +1,9 @@
-import { Owners, Prefix, Presence, Token } from '#config';
+import { CooldownFiltered, Prefix, Presence, Token } from '#config';
+import prefixSchema from '#root/schemas/prefix-schema';
 import { LogLevel, SapphireClient } from '@sapphire/framework';
 import { IntentsBitField, Message, Partials } from 'discord.js';
-import { model } from 'mongoose';
 
-export class RveinClient extends SapphireClient {
+export class GirClient extends SapphireClient {
   constructor() {
     super({
       defaultPrefix: Prefix,
@@ -11,6 +11,7 @@ export class RveinClient extends SapphireClient {
         parse: ['users'],
         repliedUser: true,
       },
+
       intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMembers,
@@ -21,14 +22,13 @@ export class RveinClient extends SapphireClient {
         IntentsBitField.Flags.GuildVoiceStates,
       ],
       partials: [Partials.Channel],
-      shardCount: 2,
       caseInsensitiveCommands: true,
       defaultCooldown: {
         delay: 5_000,
-        filteredUsers: Owners,
+        filteredUsers: CooldownFiltered,
       },
       presence: {
-        activities: [{ name: Presence.name }],
+        activities: [{ name: Presence.name, type: Presence.type }],
       },
       loadMessageCommandListeners: true,
       loadDefaultErrorListeners: false,
@@ -48,7 +48,7 @@ export class RveinClient extends SapphireClient {
   public fetchPrefix = async (message: Message) => {
     if (!message.guild) return Prefix;
 
-    const guild = await model.findOne({ guild: message.guild.id });
+    const guild = await prefixSchema.findOne({ guild: message.guild.id });
 
     return guild?.prefix ?? Prefix;
   };
