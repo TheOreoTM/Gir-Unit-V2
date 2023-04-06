@@ -17,11 +17,13 @@
     "@sapphire/utilities": "^3.11.0",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
-    "mongoose": "^7.0.3"
+    "enhanced-ms": "^2.2.0",
+    "mongoose": "^7.0.3",
+    "tsconfig-paths": "^4.2.0"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon src/index.ts"
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
   "devDependencies": {
     "@sapphire/ts-config": "^3.3.4"

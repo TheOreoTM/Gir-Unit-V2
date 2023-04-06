@@ -1,6 +1,6 @@
+import { Owners } from '#constants';
 import { Precondition } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { OWNERS } from '../lib/constants';
 
 export class OwnerOnlyPrecondition extends Precondition {
   public override async messageRun(message: Message) {
@@ -9,7 +9,7 @@ export class OwnerOnlyPrecondition extends Precondition {
   }
 
   private async checkOwner(userId: string) {
-    return OWNERS.includes(userId)
+    return Owners.includes(userId)
       ? this.ok()
       : this.error({ message: 'Only the bot owner can use this command!' });
   }

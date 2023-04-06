@@ -13,7 +13,6 @@ import type { Logger } from '@sapphire/plugin-logger';
 })
 export class UserEvent extends Listener {
   public run(payload: MessageCommandSuccessPayload) {
-    this.container.logger.debug('bruh');
     logSuccessCommand(payload);
   }
 

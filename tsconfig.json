@@ -1,16 +1,16 @@
 {
   "extends": "@sapphire/ts-config",
   "compilerOptions": {
-    // "ignoreDeprecations": "5.0",
     "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": "src/.",
-    "skipLibCheck": true,
+    "baseUrl": "src",
     "paths": {
       "#constants": ["lib/utility/constants.ts"],
       "#lib/*": ["lib/*"],
       "#root/*": ["*"]
-    }
+    },
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "esModuleInterop": true
   },
   "include": ["src"]
 }
