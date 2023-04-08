@@ -28,3 +28,13 @@ export function hours(hours: number): number {
   if (isNaN(hours)) throw new Error('Input must be a valid number');
   return Time.Hour * hours;
 }
+
+export function time({
+  unit,
+  time,
+}: {
+  unit: 'sec' | 'mins' | 'hours';
+  time: number;
+}) {
+  return { sec, mins, hours }[unit](time);
+}

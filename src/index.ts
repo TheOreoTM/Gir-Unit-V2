@@ -1,9 +1,6 @@
-import { MongoURI } from '#config';
-import { GirClient } from '#lib/utility/GirClient';
-import mongoose from 'mongoose';
+import { Token } from '#config';
+import { GirClient } from '#lib/GirClient';
 
-mongoose.connect(`${MongoURI}`);
+const client = new GirClient();
 
-export const client = new GirClient();
-
-client.start();
+client.login(Token);

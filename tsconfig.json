@@ -5,9 +5,9 @@
     "outDir": "dist",
     "baseUrl": "src",
     "paths": {
+      "#config": ["lib/utility/config.ts"],
       "#constants": ["lib/utility/constants.ts"],
       "#lib/*": ["lib/*"],
-      "#config": ["lib/utility/config"],
       "#root/*": ["*"]
     },
     "tsBuildInfoFile": "dist/.tsbuildinfo",

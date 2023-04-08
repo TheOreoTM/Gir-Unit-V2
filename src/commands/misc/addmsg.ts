@@ -1,7 +1,7 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import messageSchema from '../../schemas/message-schema';
+import messageSchema from '../../lib/structures/schemas/message-schema';
 
 @ApplyOptions<Command.Options>({
   description: 'A basic command',

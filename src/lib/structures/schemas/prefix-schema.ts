@@ -11,4 +11,4 @@ const prefixSchema = new Schema({
   prefix: reqString,
 });
 
-export default mongoose.model('messages', prefixSchema, 'messages');
+export default mongoose.model('prefixes', prefixSchema, 'prefixes');
