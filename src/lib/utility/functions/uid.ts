@@ -1,8 +1,8 @@
+import { v4 as uuid } from 'uuid';
 /**
- * It returns a string that is a combination of the current time in milliseconds and a random string of
- * 8 characters
+ * It uses the uuidv4() function
  * @returns A string of random characters.
  */
 export function uid() {
-  return Date.now().toString(32) + Math.random().toString(32).substring(2, 10);
+  return uuid();
 }

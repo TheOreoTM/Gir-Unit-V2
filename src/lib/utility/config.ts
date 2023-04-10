@@ -1,3 +1,4 @@
+import { CooldownFiltered } from '#constants';
 import {
   BucketScope,
   ClientLoggerOptions,
@@ -20,10 +21,6 @@ export const Token = process.env.TOKEN;
 
 export const MongoURI = process.env.MONGO_URI;
 
-export const Owners = ['600707283097485322', '395758956091277315'];
-
-export const CooldownFiltered = [...Owners];
-
 export const Prefix = '>';
 
 export const Presence = {
@@ -43,7 +40,7 @@ export const config: Config = {
   ],
   cooldown_options: {
     delay: sec(5),
-    filteredUsers: Owners,
+    filteredUsers: CooldownFiltered,
     scope: BucketScope.User,
   },
   mentions: {

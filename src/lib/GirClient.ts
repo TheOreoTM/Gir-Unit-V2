@@ -5,7 +5,9 @@ import type { Message } from 'discord.js';
 import mongoose from 'mongoose';
 import type { Utils } from './structures';
 
-export class GirClient extends SapphireClient {
+export class GirClient<
+  Ready extends boolean = boolean
+> extends SapphireClient<Ready> {
   public constructor() {
     super(ClientConfig);
   }

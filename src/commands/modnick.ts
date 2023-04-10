@@ -4,7 +4,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 
 @ApplyOptions<GirCommand.Options>({
   description: 'A basic command',
-  preconditions: ['Staff'],
   permissionLevel: PermissionLevels.Trainee,
 })
 export class UserCommand extends GirCommand {

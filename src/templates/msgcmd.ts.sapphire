@@ -1,0 +1,16 @@
+{
+  "category": "commands"
+}
+---
+import { GirCommand } from '#lib/structures';
+import { ApplyOptions } from '@sapphire/decorators';
+
+@ApplyOptions<GirCommand.Options>({
+	description: 'A basic command',
+	name: '{{name}}',
+})
+export class {{name}}Command extends GirCommand {
+	public async messageRun(message: GirCommand.Message, args: GirCommand.Args) {
+		return message.channel.send('Hello world!');
+	}
+}
