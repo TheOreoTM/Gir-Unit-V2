@@ -19,7 +19,7 @@ import { sec } from './functions';
 
 export const Token = process.env.TOKEN;
 
-export const MongoURI = process.env.MONGO_URI;
+export const MongoURI = process.env.MONGO_URI as string;
 
 export const Prefix = '>';
 

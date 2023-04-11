@@ -2,8 +2,8 @@ import { ClientConfig, MongoURI, Prefix } from '#config';
 import prefixSchema from '#lib/structures/schemas/prefix-schema';
 import { SapphireClient } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import mongoose from 'mongoose';
 import type { Utils } from './structures';
+import { connectToMongo } from './utility';
 
 export class GirClient<
   Ready extends boolean = boolean
@@ -12,7 +12,7 @@ export class GirClient<
     super(ClientConfig);
   }
   public override async login(token?: string): Promise<string> {
-    await mongoose.connect(`${MongoURI}`);
+    await connectToMongo(MongoURI);
     return super.login(token);
   }
   public override destroy(): void {

@@ -18,7 +18,7 @@ export function generateModLogDescription({
     member instanceof GuildMember ? member.user.tag : member.tag
   } [\`${member.id}\`]`;
   description += `\n**Action**: ${action}`;
-  description += `\n**Reason**: ${reason ?? 'Not Provided'}`;
+  description += `\n**Reason**: ${reason ?? 'No Reason'}`;
   if (duration)
     description += `\n**Expires**: ${duration.getShortDateTime()} [${duration.getRelativeTime()}]`;
   if (warnId) description += `\n**Warn ID**: \`${warnId}\``;

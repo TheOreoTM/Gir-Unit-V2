@@ -1,7 +1,7 @@
+import { GirEvents } from '#lib/types';
 import { logSuccessCommand } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import {
-  Events,
   Listener,
   LogLevel,
   MessageCommandSuccessPayload,
@@ -9,10 +9,11 @@ import {
 import type { Logger } from '@sapphire/plugin-logger';
 
 @ApplyOptions<Listener.Options>({
-  event: Events.MessageCommandAccepted,
+  event: GirEvents.MessageCommandAccepted,
 })
 export class UserEvent extends Listener {
   public run(payload: MessageCommandSuccessPayload) {
+    console.log('yeehaa');
     logSuccessCommand(payload);
   }
 

@@ -27,8 +27,8 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "start": "set NODE_ENV=production && ts-node -r tsconfig-paths/register src/index.ts",
-    "dev": "set NODE_ENV=development && nodemon -r tsconfig-paths/register src/index.ts"
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
   "devDependencies": {
     "@sapphire/ts-config": "^3.3.4",

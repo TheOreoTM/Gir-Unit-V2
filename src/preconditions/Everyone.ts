@@ -7,9 +7,3 @@ export class UserPermissionsPrecondition extends PermissionsPrecondition {
     return this.ok();
   }
 }
-
-declare module '@sapphire/framework' {
-  interface Preconditions {
-    Everyone: never;
-  }
-}

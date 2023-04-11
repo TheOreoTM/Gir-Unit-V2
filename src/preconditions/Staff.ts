@@ -25,9 +25,3 @@ export class UserPermissionsPrecondition extends PermissionsPrecondition {
         });
   }
 }
-
-declare module '@sapphire/framework' {
-  interface Preconditions {
-    Staff: never;
-  }
-}

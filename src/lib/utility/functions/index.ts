@@ -7,11 +7,13 @@ export * from './formatter';
 export * from './generateDescription';
 export * from './logSuccessCommand';
 export * from './mention';
+export { sendTemporaryMessage } from './messages';
 export * from './modperms';
 export * from './permissions';
 export * from './pickRandom';
+export * from './promises';
 export * from './role';
 export * from './summableArray';
 export * from './time';
-export * from './uid';
+export { uid } from './uid'; // why?
 export * from './wait';

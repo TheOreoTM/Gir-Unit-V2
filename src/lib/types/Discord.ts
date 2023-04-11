@@ -52,7 +52,7 @@ export interface GuildCommandInteractionOptionResolver
   getRole(name: string, required?: boolean): Role;
 }
 
-export interface RadonButtonInteraction extends ButtonInteraction {
+export interface GirButtonInteraction extends ButtonInteraction {
   readonly message: Message;
   client: GirClient<true>;
 }

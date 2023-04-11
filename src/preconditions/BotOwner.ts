@@ -26,9 +26,3 @@ export class UserPrecondition extends Precondition {
       : this.error({ context: { silent: true } });
   }
 }
-
-declare module '@sapphire/framework' {
-  interface Preconditions {
-    BotOwner: never;
-  }
-}

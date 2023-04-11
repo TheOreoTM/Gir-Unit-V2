@@ -159,6 +159,8 @@ declare module '@sapphire/framework' {
   interface Preconditions {
     BotOwner: never;
     Everyone: never;
+    Trainee: never;
+    Staff: never;
     Moderator: never;
     Administrator: never;
     ServerOwner: never;

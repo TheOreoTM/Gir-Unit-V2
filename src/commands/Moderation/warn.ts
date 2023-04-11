@@ -6,7 +6,6 @@ import type { Message } from 'discord.js';
 @ApplyOptions<Command.Options>({
   description: 'A basic command',
   name: 'warn',
-  preconditions: ['GuildOnly'],
 })
 export class UserCommand extends Command {
   public async messageRun(message: Message, args: Args) {

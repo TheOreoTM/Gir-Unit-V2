@@ -1,3 +1,4 @@
+import { container } from '@sapphire/framework';
 import mongoose from 'mongoose';
 
 export async function connectToMongo(URI: string) {
@@ -7,9 +8,9 @@ export async function connectToMongo(URI: string) {
       keepAlive: true,
     })
     .then(() => {
-      console.log('Mongoose connected!');
+      container.logger.info('Mongoose connected!');
     })
     .catch((err) => {
-      console.log('Mongoose failed to connect', err);
+      container.logger.fatal('Mongoose failed to connect', err);
     });
 }

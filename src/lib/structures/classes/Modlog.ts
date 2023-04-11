@@ -1,5 +1,5 @@
 import type { modAction } from '#lib/types';
-import type { Guild, GuildMember } from 'discord.js';
+import type { Guild, GuildMember, Snowflake } from 'discord.js';
 import modlogsSchema from '../schemas/modlogs-schema';
 
 export class Modlog {
@@ -52,7 +52,7 @@ export class Modlog {
     return modlog;
   }
 
-  public async get(caseNum: string): Promise<any | null> {
+  public async getOne(caseNum: string): Promise<any | null> {
     const data = await modlogsSchema.findOne({ case: caseNum });
 
     if (!data) return null;
@@ -60,5 +60,15 @@ export class Modlog {
     if (data) return data;
 
     return null;
+  }
+
+  public async getMany(userId: Snowflake) {
+    const data = await modlogsSchema.find({
+      userId: userId,
+      guildId: this.guild!.id,
+    });
+
+    if (!data) return null;
+    return data;
   }
 }
