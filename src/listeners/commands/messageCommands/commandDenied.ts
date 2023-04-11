@@ -44,7 +44,7 @@ export class CommandDenied extends Listener {
       const { missing } = error.context as { missing: [] };
       return await sendTemporaryMessage(message, {
         content: `You need \`${format(missing).join('` `')}\` permission${
-          missing.length - 1 === 0 ? '' : 's'
+          missing.length - 1 === 0 ? '' : '(s)'
         } to run this command`,
       });
     } else {
