@@ -11,7 +11,7 @@
     "@sapphire/discord-utilities": "^3.0.1",
     "@sapphire/discord.js-utilities": "^6.0.4",
     "@sapphire/duration": "^1.1.0",
-    "@sapphire/framework": "^4.2.2",
+    "@sapphire/framework": "^4.3.1",
     "@sapphire/plugin-editable-commands": "^3.0.1",
     "@sapphire/plugin-logger": "^3.0.2",
     "@sapphire/type": "^2.3.0",
@@ -24,6 +24,7 @@
     "mongoose": "^7.0.3",
     "randomatic": "^3.1.1",
     "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.0.4",
     "uuid": "^9.0.0"
   },
   "scripts": {
@@ -31,7 +32,7 @@
     "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
   "devDependencies": {
-    "@sapphire/ts-config": "^3.3.4",
+    "@sapphire/ts-config": "^4.0.0",
     "@types/gradient-string": "^1.1.2",
     "@types/uuid": "^9.0.1"
   }
