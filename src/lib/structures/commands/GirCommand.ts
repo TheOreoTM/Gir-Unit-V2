@@ -4,24 +4,25 @@ import type { GuildSettings } from '#lib/structures';
 import { GuildMessage, PermissionLevels } from '#lib/types';
 import {
   ApplicationCommandRegistry,
-  Args as SapphireArgs,
   ChatInputCommandContext,
   Command,
   CommandOptionsRunTypeEnum,
   ContextMenuCommandContext,
   MessageCommandContext,
   PreconditionContainerArray,
+  Args as SapphireArgs,
   UserError,
 } from '@sapphire/framework';
 import {
   AutocompleteInteraction,
-  ChatInputCommandInteraction as ChatInputInteraction,
   ContextMenuCommandInteraction as CTXMenuCommandInteraction,
+  ChatInputCommandInteraction as ChatInputInteraction,
   MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
   PermissionFlagsBits,
   PermissionsBitField,
   UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction,
 } from 'discord.js';
+import type { Logging } from '../classes/Logging';
 export abstract class GirCommand extends Command {
   /**
    * Whether the command can be disabled.
@@ -170,5 +171,6 @@ declare module '@sapphire/framework' {
 declare module 'discord.js' {
   interface Guild {
     settings: GuildSettings | null;
+    logging: Logging | null;
   }
 }

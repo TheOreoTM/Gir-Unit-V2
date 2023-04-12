@@ -3,8 +3,9 @@ import type { Guild, GuildMember, User } from 'discord.js';
 export interface BaseModActionData {
   staff: GuildMember;
   user: GuildMember | User;
-  reason?: string;
   action: modAction;
+  caseNum: string;
+  reason: string;
 }
 
 export type modAction =
@@ -12,12 +13,18 @@ export type modAction =
   | 'ban'
   | 'softban'
   | 'unban'
-  | 'timeout'
   | 'warn'
   | 'warn_remove'
   | 'mute'
   | 'unmute'
   | 'modnick';
+
+// export type MessageEvents =
+// | 'message_delete'
+// | 'message_edit'
+// | 'image_delete'
+// | 'message_bulk_delete'
+// |
 
 export interface WarnActionData {
   _id: string; // Warn Id
@@ -33,10 +40,10 @@ export interface WarnActionData {
 }
 
 export interface ModlogData {
-  guild: Guild | null;
+  guild: Guild;
   member: GuildMember;
   staff: GuildMember;
   action: modAction;
   reason: string;
-  length?: number | null;
+  length?: number;
 }

@@ -16,8 +16,7 @@ export class PingCommand extends Command {
   public async messageRun(message: Message) {
     const msg = await message.reply('Ping');
     const ping = Math.floor(message.client.ws.ping);
-    setTimeout(() => {
-      msg.edit(`Ping \`${ping}ms\``);
-    }, ping);
+
+    msg.edit(`Ping \`${ping}ms\``);
   }
 }

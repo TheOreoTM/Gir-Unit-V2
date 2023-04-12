@@ -3,7 +3,7 @@ import type { Guild, GuildMember, Snowflake } from 'discord.js';
 import modlogsSchema from '../schemas/modlogs-schema';
 
 export class Modlog {
-  guild: Guild | null;
+  guild: Guild;
   member: GuildMember;
   staff: GuildMember;
   action: modAction;
@@ -18,7 +18,7 @@ export class Modlog {
     reason,
     length,
   }: {
-    guild: Guild | null;
+    guild: Guild;
     member: GuildMember;
     staff: GuildMember;
     action: modAction;
@@ -49,11 +49,15 @@ export class Modlog {
       action: this.action,
       case: this.case,
     });
+
     return modlog;
   }
 
   public async getOne(caseNum: string): Promise<any | null> {
-    const data = await modlogsSchema.findOne({ case: caseNum });
+    const data = await modlogsSchema.findOne({
+      guildId: this.guild.id,
+      case: caseNum,
+    });
 
     if (!data) return null;
 

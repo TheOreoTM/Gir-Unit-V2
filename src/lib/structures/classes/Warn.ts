@@ -27,7 +27,7 @@ export class Warn {
     this.case = '';
   }
 
-  public async generateModlog(guild: Guild | null): Promise<Modlog> {
+  public async generateModlog(guild: Guild): Promise<Modlog> {
     const staff = guild!.members.cache.get(this.staffId) as GuildMember;
     const member = guild!.members.cache.get(this.memberId) as GuildMember;
 

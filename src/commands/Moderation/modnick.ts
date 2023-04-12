@@ -13,7 +13,16 @@ export class UserCommand extends GirCommand {
   public async messageRun(message: GirCommand.Message, args: GirCommand.Args) {
     const frozen = args.getFlags('freeze', 'f', 'frozen');
     const member = await args.pick('member');
-    const nick = await args.rest('string').catch(() => null);
+    const nick = await args.rest('string').catch(() => undefined);
+
+    const pass = this.container.utils.runAllChecks(
+      message.member,
+      member,
+      'modnick'
+    );
+    if (!pass.result) {
+      return send(message, { content: `${pass.content}` });
+    }
 
     const identifier = await message.guild?.settings?.modnicks.create(
       member,
@@ -22,7 +31,7 @@ export class UserCommand extends GirCommand {
       frozen
     );
 
-    await send(message, {
+    return await send(message, {
       embeds: [
         new SuccessEmbed(
           `User with ID \`${

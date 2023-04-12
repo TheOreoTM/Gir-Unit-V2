@@ -7,7 +7,7 @@ import * as utils from '#lib/utility';
 export class Utils {
   public countlines = utils.countlines; // utils.countlines doesnt work
   public formatDuration = utils.formatDuration;
-  public generateModLogDescription = utils.generateModLogDescription;
+  public generateModlogEmbed = utils.generateModLogEmbed;
   public isAdmin = utils.isAdmin;
   public isGuildOwner = utils.isGuildOwner;
   public isModerator = utils.isModerator;

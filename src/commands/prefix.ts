@@ -1,17 +1,20 @@
-import { FailEmbed, SuccessEmbed } from '#lib/structures';
+import { FailEmbed, GirCommand, SuccessEmbed } from '#lib/structures';
 import prefixSchema from '#lib/structures/schemas/prefix-schema';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Message, PermissionFlagsBits } from 'discord.js';
 
-@ApplyOptions<Command.Options>({
-  description: 'Sets the prefix for the server',
-  name: 'prefix',
-  requiredUserPermissions: [PermissionFlagsBits.ManageGuild],
+@ApplyOptions<GirCommand.Options>({
+  description: 'Change the prefix for the server',
+  quotes: [
+    ["'", "'"], // Single qoutes
+    ['"', '"'], // Double quotes
+    ['“', '”'], // Fancy quotes (on iOS)
+    ['「', '」'], // Corner brackets (CJK)
+    ['«', '»'], // French quotes (guillemets)
+  ],
 })
-export class UserCommand extends Command {
-  public async messageRun(message: Message, args: Args) {
+export class PrefixCommand extends GirCommand {
+  public async messageRun(message: GirCommand.Message, args: GirCommand.Args) {
     let prefix = await args.pick('string');
     if (prefix.length > 7)
       return await send(message, {
@@ -23,6 +26,8 @@ export class UserCommand extends Command {
       { prefix: prefix },
       { upsert: true }
     );
+
+    console.log(await message.guild.logging?.moderation);
 
     return await send(message, {
       embeds: [

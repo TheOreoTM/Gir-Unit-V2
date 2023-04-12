@@ -10,6 +10,7 @@ import type { Message } from 'discord.js';
 export class UserCommand extends Command {
   public async messageRun(message: Message, args: Args) {
     if (!message.member) return;
+    if (!message.guild) return;
     const target = await args.pick('member');
     const reason = await args.rest('string');
 

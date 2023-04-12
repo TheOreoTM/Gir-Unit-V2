@@ -1,16 +1,10 @@
 import { Time } from '@sapphire/duration';
 import { send, type MessageOptions } from '@sapphire/plugin-editable-commands';
 import { sleep } from '@sapphire/utilities';
-import { RESTJSONErrorCodes, type Message } from 'discord.js';
-import { floatPromise, resolveOnErrorCodes } from '..';
+import type { Message } from 'discord.js';
 
 async function deleteMessageImmediately(message: Message): Promise<Message> {
-  return (
-    (await resolveOnErrorCodes(
-      message.delete(),
-      RESTJSONErrorCodes.UnknownMessage
-    )) ?? message
-  );
+  return message.deletable ? message.delete() : message;
 }
 
 /**
@@ -55,6 +49,6 @@ export async function sendTemporaryMessage(
   if (typeof options === 'string') options = { content: options };
 
   const response = (await send(message, options)) as Message;
-  floatPromise(deleteMessage(response, timer));
+  deleteMessage(response, timer);
   return response;
 }

@@ -11,11 +11,11 @@ export class Modnick {
   public async create(
     member: GuildMember,
     staff: GuildMember,
-    nickname: string | null,
+    nickname: string | undefined,
     frozen: boolean
   ) {
     if (!member || !staff) throw new Error('Member or staff is null');
-
+    nickname = nickname?.slice(0, 32);
     const identifier = nickname ? nickname : randomatic('Aa', 8);
     const modnick = nickname ? nickname : `Moderated Nickname ${identifier}`;
 
@@ -24,6 +24,7 @@ export class Modnick {
       {
         guildId: this.guild.id,
         userId: member.id,
+        nickname: modnick,
         oldNickname: member.displayName,
         identifier: identifier,
         frozen: frozen ? frozen : false,
@@ -51,7 +52,7 @@ export class Modnick {
     return identifier;
   }
 
-  public async fetch(userId: Snowflake) {
+  public async get(userId: Snowflake) {
     const userData = await modnickSchema.findOne({
       guildId: this.guild.id,
       userId: userId,

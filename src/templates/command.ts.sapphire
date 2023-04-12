@@ -1,0 +1,16 @@
+{
+  "category": "commands"
+}
+---
+import { ApplyOptions } from '@sapphire/decorators';
+import { MyExtendedCommand } from './somewhere';
+import { Message } from 'discord.js';
+
+@ApplyOptions<MyExtendedCommand.Options>({
+    description: 'A basic command'
+})
+export class {{name}}Command extends MyExtendedCommand {
+    public async messageRun(message: Message) {
+        return message.channel.send('Hello world!');
+    }
+}

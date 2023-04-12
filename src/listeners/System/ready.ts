@@ -1,5 +1,6 @@
 import type { GirClient } from '#lib/GirClient';
 import { GuildSettings, Utils } from '#lib/structures';
+import { Logging } from '#lib/structures/classes/Logging';
 import { GirEvents } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener, Piece, Store } from '@sapphire/framework';
@@ -32,6 +33,7 @@ export class UserListener extends Listener {
     const guilds = client.guilds.cache;
     for (const guild of guilds.values()) {
       guild.settings = new GuildSettings(guild);
+      guild.logging = new Logging(guild);
     }
   }
 

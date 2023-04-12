@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 
 const reqString = {
   type: String,
-  requred: true,
+  required: true,
 };
 
 const messagesSchema = new Schema(

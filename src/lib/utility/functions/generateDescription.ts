@@ -1,26 +1,71 @@
-import type { Timestamp } from '#lib/structures';
-import { GuildMember, User } from 'discord.js';
+import { ModColors } from '#constants';
+import type { modAction } from '#lib/types';
+import { EmbedBuilder, GuildMember, User } from 'discord.js';
+import { ms } from 'enhanced-ms';
 
-export function generateModLogDescription({
+export function generateModLogEmbed({
   member,
+  staff,
   action,
   reason,
-  duration,
-  warnId,
+  caseNum,
+  length,
 }: {
   member: GuildMember | User;
-  action: string;
-  reason?: string;
-  duration?: Timestamp;
-  warnId?: string;
+  staff: GuildMember | User;
+  action: modAction;
+  caseNum: string;
+  reason: string;
+  length?: number;
 }) {
-  let description = `**Target**: ${
-    member instanceof GuildMember ? member.user.tag : member.tag
-  } [\`${member.id}\`]`;
-  description += `\n**Action**: ${action}`;
-  description += `\n**Reason**: ${reason ?? 'No Reason'}`;
-  if (duration)
-    description += `\n**Expires**: ${duration.getShortDateTime()} [${duration.getRelativeTime()}]`;
-  if (warnId) description += `\n**Warn ID**: \`${warnId}\``;
-  return description;
+  const formattedAction = actions[action];
+  const memberTag =
+    member instanceof GuildMember ? member.user.tag : member.tag;
+  const staffTag = staff instanceof GuildMember ? staff.user.tag : staff.tag;
+
+  const embed = new EmbedBuilder()
+    .setColor(ModColors[action])
+    .setAuthor({
+      name: `Case ${caseNum} | ${formattedAction} | ${memberTag}`,
+    })
+    .addFields(
+      {
+        inline: true,
+        name: `User`,
+        value: [`<@${member.id}>`, `**${memberTag}** - \`${member.id}\``].join(
+          '\n'
+        ),
+      },
+      {
+        inline: true,
+        name: 'Moderator',
+        value: [`<@${staff.id}>`, `**${staffTag}** - \`${staff.id}\``].join(
+          '\n'
+        ),
+      }
+    );
+
+  if (length) {
+    embed.addFields({
+      inline: true,
+      name: 'Length',
+      value: `${ms(length, { shortFormat: false })}`,
+    });
+  }
+
+  embed.addFields({ name: 'Reason', value: reason });
+
+  return embed;
 }
+
+const actions = {
+  warn: 'Warn',
+  warn_remove: 'Warn Removal',
+  kick: 'Kick',
+  ban: 'Ban',
+  softban: 'Softban',
+  unban: 'Unban',
+  modnick: 'Modnick',
+  mute: 'Mute',
+  unmute: 'Unmute',
+};

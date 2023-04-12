@@ -37,4 +37,15 @@ export const GirColors = {
   default: 0x2b2d31 as ColorResolvable,
 };
 
+export const ModColors = {
+  mute: GirColors.warn,
+  warn: GirColors.warn,
+  ban: GirColors.fail,
+  softban: GirColors.fail,
+  kick: GirColors.fail,
+  unban: GirColors.success,
+  unmute: GirColors.success,
+  warn_remove: GirColors.success,
+  modnick: GirColors.warn,
+};
 // Refactor the #constants and #config

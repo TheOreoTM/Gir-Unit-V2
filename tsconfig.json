@@ -11,7 +11,8 @@
       "#root/*": ["*"]
     },
     "tsBuildInfoFile": "dist/.tsbuildinfo",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "ignoreDeprecations": "5.0"
   },
   "include": ["src"]
 }
