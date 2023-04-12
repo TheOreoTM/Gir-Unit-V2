@@ -1,5 +1,6 @@
 import { GirCommand, SuccessEmbed } from '#lib/structures';
 import { PermissionLevels } from '#lib/types';
+import { runAllChecks } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -15,13 +16,9 @@ export class UserCommand extends GirCommand {
     const member = await args.pick('member');
     const nick = await args.rest('string').catch(() => undefined);
 
-    const pass = this.container.utils.runAllChecks(
-      message.member,
-      member,
-      'modnick'
-    );
+    const pass = runAllChecks(message.member, member, 'modnick');
     if (!pass.result) {
-      return send(message, { content: `${pass.content}` });
+      return send(message, { embeds: [pass.content] });
     }
 
     const identifier = await message.guild?.settings?.modnicks.create(

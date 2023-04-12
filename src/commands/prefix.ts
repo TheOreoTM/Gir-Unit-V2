@@ -27,8 +27,6 @@ export class PrefixCommand extends GirCommand {
       { upsert: true }
     );
 
-    console.log(await message.guild.logging?.moderation);
-
     return await send(message, {
       embeds: [
         new SuccessEmbed(

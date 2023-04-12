@@ -1,5 +1,5 @@
 import type { GirClient } from '#lib/GirClient';
-import { ChannelType, GuildChannel, TextBasedChannel } from 'discord.js';
+import { ChannelType, GuildChannel, type TextBasedChannel } from 'discord.js';
 
 export function getCache(client: GirClient) {
   const guildCacheSize = client.guilds.cache.size;

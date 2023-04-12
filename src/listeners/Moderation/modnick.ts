@@ -1,9 +1,9 @@
 import { GirEvents } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Listener, ListenerOptions } from '@sapphire/framework';
+import { Listener } from '@sapphire/framework';
 import { AuditLogEvent, GuildMember } from 'discord.js';
 
-@ApplyOptions<ListenerOptions>({
+@ApplyOptions<Listener.Options>({
   event: GirEvents.GuildMemberUpdate,
 })
 export class UserEvent extends Listener {

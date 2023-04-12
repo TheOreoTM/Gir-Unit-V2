@@ -24,7 +24,6 @@
     "mongoose": "^7.0.3",
     "randomatic": "^3.1.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.0.4",
     "uuid": "^9.0.0"
   },
   "scripts": {
@@ -32,7 +31,7 @@
     "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
   "devDependencies": {
-    "@sapphire/ts-config": "^4.0.0",
+    "@sapphire/ts-config": "^3.3.4",
     "@types/gradient-string": "^1.1.2",
     "@types/uuid": "^9.0.1"
   }

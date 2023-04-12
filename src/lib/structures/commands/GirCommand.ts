@@ -1,17 +1,17 @@
 // import type { GuildSettings } from '#lib/structures';
 // import type { GuildMessage } from '#lib/types';
 import type { GuildSettings } from '#lib/structures';
-import { GuildMessage, PermissionLevels } from '#lib/types';
+import { PermissionLevels, type GuildMessage } from '#lib/types';
 import {
   ApplicationCommandRegistry,
-  ChatInputCommandContext,
   Command,
   CommandOptionsRunTypeEnum,
-  ContextMenuCommandContext,
-  MessageCommandContext,
   PreconditionContainerArray,
   Args as SapphireArgs,
   UserError,
+  type ChatInputCommandContext,
+  type ContextMenuCommandContext,
+  type MessageCommandContext,
 } from '@sapphire/framework';
 import {
   AutocompleteInteraction,

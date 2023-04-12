@@ -1,8 +1,8 @@
 import { format, sendTemporaryMessage } from '#lib/utility';
 import {
   Listener,
-  MessageCommandDeniedPayload,
   UserError,
+  type MessageCommandDeniedPayload,
 } from '@sapphire/framework';
 import { ms } from 'enhanced-ms';
 

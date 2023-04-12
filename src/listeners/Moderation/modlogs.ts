@@ -1,4 +1,4 @@
-import { BaseModActionData, GirEvents } from '#lib/types';
+import { GirEvents, type BaseModActionData } from '#lib/types';
 import { generateModLogEmbed } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
@@ -12,7 +12,8 @@ export class UserListener extends Listener {
   }
 
   private async sendModLog(data: BaseModActionData) {
-    if (!data.staff.guild.logging?.moderation) return;
+    const channel = await data.staff.guild.logging?.moderation;
+    if (!channel) return;
 
     const embed = generateModLogEmbed({
       action: data.action,
@@ -22,8 +23,6 @@ export class UserListener extends Listener {
       caseNum: data.caseNum,
     });
 
-    await data.staff.guild.logging?.moderation.then((chn) =>
-      chn?.send({ embeds: [embed] })
-    );
+    channel.send({ embeds: [embed] });
   }
 }

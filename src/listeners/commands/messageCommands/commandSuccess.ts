@@ -4,7 +4,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import {
   Listener,
   LogLevel,
-  MessageCommandSuccessPayload,
+  type MessageCommandSuccessPayload,
 } from '@sapphire/framework';
 import type { Logger } from '@sapphire/plugin-logger';
 

@@ -1,18 +1,18 @@
 import { CooldownFiltered } from '#constants';
 import {
   BucketScope,
-  ClientLoggerOptions,
-  CooldownOptions,
   LogLevel,
-  SapphirePrefix,
+  type ClientLoggerOptions,
+  type CooldownOptions,
+  type SapphirePrefix,
 } from '@sapphire/framework';
 import {
   ActivityType,
-  ClientOptions,
   GatewayIntentBits,
-  MessageMentionOptions,
   Partials,
-  PresenceData,
+  type ClientOptions,
+  type MessageMentionOptions,
+  type PresenceData,
 } from 'discord.js';
 import 'dotenv/config';
 import { sec } from './functions';

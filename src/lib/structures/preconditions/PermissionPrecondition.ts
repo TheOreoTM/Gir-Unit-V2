@@ -1,15 +1,15 @@
 import type { GirCommand } from '#lib/structures';
 import {
-  AsyncPreconditionResult,
-  ChatInputCommand,
   Command,
-  ContextMenuCommand,
   Identifiers,
-  PieceContext,
   Precondition,
-  PreconditionContext,
-  PreconditionOptions,
-  PreconditionResult,
+  type AsyncPreconditionResult,
+  type ChatInputCommand,
+  type ContextMenuCommand,
+  type PieceContext,
+  type PreconditionContext,
+  type PreconditionOptions,
+  type PreconditionResult,
 } from '@sapphire/framework';
 import type {
   CommandInteraction,

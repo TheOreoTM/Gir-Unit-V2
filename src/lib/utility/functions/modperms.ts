@@ -1,5 +1,5 @@
-import { GirEmojis as Emojis } from '#constants';
-import { GuildMember, User } from 'discord.js';
+import { FailEmbed, SuccessEmbed } from '#lib/structures';
+import { EmbedBuilder, GuildMember, User } from 'discord.js';
 import { isAdmin } from './permissions';
 /**
  * Runs all checks before executing a moderation command
@@ -13,20 +13,20 @@ export function runAllChecks(
   action: string
 ) {
   let result: boolean;
-  let content: string;
+  let content: EmbedBuilder;
   if (target instanceof User) {
     result = true;
-    content = '';
+    content = new SuccessEmbed(``);
   } else if (!target.manageable || isAdmin(target)) {
     result = false;
-    content = `${Emojis.fail} I can't ${action} ${target}`;
+    content = new FailEmbed(`I can't ${action} ${target}`);
   } else if (
     executor.roles.highest.position === target.roles.highest.position
   ) {
-    content = `${Emojis.fail} You can't ${action} ${target}`;
+    content = new FailEmbed(`You can't ${action} ${target}`);
     result = false;
   } else {
-    (result = true), (content = '');
+    (result = true), (content = new SuccessEmbed(''));
   }
   return { result, content };
 }
