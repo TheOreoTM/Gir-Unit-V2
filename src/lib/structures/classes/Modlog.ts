@@ -1,4 +1,5 @@
-import type { modAction } from '#lib/types';
+import { GirEvents, type BaseModActionData, type modAction } from '#lib/types';
+import { container } from '@sapphire/framework';
 import type { Guild, GuildMember, Snowflake } from 'discord.js';
 import modlogsSchema from '../schemas/modlogs-schema';
 
@@ -50,6 +51,16 @@ export class Modlog {
       case: this.case,
     });
 
+    const data: BaseModActionData = {
+      staff: this.staff,
+      user: this.member,
+      action: this.action,
+      caseNum: this.case,
+      reason: this.reason,
+    };
+
+    container.client.emit(GirEvents.ModAction, data);
+
     return modlog;
   }
 
@@ -61,9 +72,7 @@ export class Modlog {
 
     if (!data) return null;
 
-    if (data) return data;
-
-    return null;
+    return data;
   }
 
   public async getMany(userId: Snowflake) {

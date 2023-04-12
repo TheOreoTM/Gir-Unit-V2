@@ -9,21 +9,26 @@ export function isAdmin(member: GuildMember): boolean {
 }
 
 export function isModerator(member: GuildMember): boolean {
-  return isAdmin(member);
-  // || member.roles.cache.some((r) => r.name.toLowerCase().includes('moderator'))
+  return (
+    isAdmin(member) ||
+    member.roles.cache.some((r) => r.name.toLowerCase().includes('moderator'))
+  );
 }
 
 export function isStaff(member: GuildMember): boolean {
   return (
-    isAdmin(member) || isModerator(member)
-    // || member.roles.cache.some((r) => r.name.toLowerCase().includes('staff'))
+    isAdmin(member) ||
+    isModerator(member) ||
+    member.roles.cache.some((r) => r.name.toLowerCase().includes('staff'))
   );
 }
 
 export function isTrainee(member: GuildMember): boolean {
   return (
-    isAdmin(member) || isModerator(member) || isStaff(member)
-    // || member.roles.cache.some((r) => r.name.toLowerCase().includes('staff'))
+    isAdmin(member) ||
+    isModerator(member) ||
+    isStaff(member) ||
+    member.roles.cache.some((r) => r.name.toLowerCase().includes('trainee'))
   );
 }
 

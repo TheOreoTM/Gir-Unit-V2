@@ -21,7 +21,7 @@ export class UserCommand extends GirCommand {
       return send(message, { embeds: [pass.content] });
     }
 
-    const identifier = await message.guild?.settings?.modnicks.create(
+    const output = await message.guild?.settings?.modnicks.create(
       member,
       message.member,
       nick,
@@ -33,9 +33,9 @@ export class UserCommand extends GirCommand {
         new SuccessEmbed(
           `User with ID \`${
             member.id
-          }\` has been modnicked with the identifier \`${identifier}\` ${
-            frozen ? '❄️' : ''
-          }`
+          }\` has been modnicked with the identifier \`${
+            output?.identifier
+          }\` ${frozen ? '❄️' : ''}`
         ),
       ],
     });

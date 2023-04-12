@@ -21,7 +21,6 @@ export function generateModLogEmbed({
   const formattedAction = actions[action];
   const memberTag =
     member instanceof GuildMember ? member.user.tag : member.tag;
-  const staffTag = staff instanceof GuildMember ? staff.user.tag : staff.tag;
 
   const embed = new EmbedBuilder()
     .setColor(ModColors[action])
@@ -32,16 +31,12 @@ export function generateModLogEmbed({
       {
         inline: true,
         name: `User`,
-        value: [`<@${member.id}>`, `**${memberTag}** - \`${member.id}\``].join(
-          '\n'
-        ),
+        value: [`<@${member.id}>`].join('\n'),
       },
       {
         inline: true,
         name: 'Moderator',
-        value: [`<@${staff.id}>`, `**${staffTag}** - \`${staff.id}\``].join(
-          '\n'
-        ),
+        value: [`<@${staff.id}>`].join('\n'),
       }
     );
 
@@ -53,7 +48,7 @@ export function generateModLogEmbed({
     });
   }
 
-  embed.addFields({ name: 'Reason', value: reason });
+  embed.addFields({ inline: true, name: 'Reason', value: reason });
 
   return embed;
 }

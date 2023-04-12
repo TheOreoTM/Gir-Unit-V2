@@ -44,12 +44,12 @@ export class Modnick {
       action: 'modnick',
       member: member,
       staff: staff,
-      reason: 'Modnick command used',
+      reason: `Nickname changed to \`${identifier}\``,
     };
     const log = new Modlog(modlogData);
     await log.create();
 
-    return identifier;
+    return { identifier: identifier, caseNum: log.case };
   }
 
   public async get(userId: Snowflake) {

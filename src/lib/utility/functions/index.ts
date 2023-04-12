@@ -1,18 +1,25 @@
-export * from './cache';
-export * from './clean';
-export * from './connectToMongo';
-export * from './countlines';
-export * from './duration';
-export * from './formatter';
-export * from './generateDescription';
-export * from './logSuccessCommand';
-export * from './mention';
-export * from './messages';
-export * from './modperms';
-export * from './permissions';
-export * from './pickRandom';
-export * from './role';
-export * from './summableArray';
-export * from './time';
+export { getCache } from './cache';
+export { clean, initClean } from './clean';
+export { connectToMongo } from './connectToMongo';
+export { countlines } from './countlines';
+export { hours, mins, sec, time } from './duration';
+export { format } from './formatter';
+export { generateModLogEmbed } from './generateDescription';
+export { getSuccessLoggerData, logSuccessCommand } from './logSuccessCommand';
+export { mention } from './mention';
+export { deleteMessage, sendTemporaryMessage } from './messages';
+export { runAllChecks } from './modperms';
+export {
+  isAdmin,
+  isGuildOwner,
+  isModerator,
+  isOwner,
+  isStaff,
+  isTrainee,
+} from './permissions';
+export { pickRandom } from './pickRandom';
+export { managable } from './role';
+export { summableArray } from './summableArray';
+export { formatDuration } from './time';
 export { uid } from './uid'; // why?
-export * from './wait';
+export { wait } from './wait';
