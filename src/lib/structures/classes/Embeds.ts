@@ -5,32 +5,32 @@ import { EmbedBuilder } from 'discord.js';
 export class SuccessEmbed extends EmbedBuilder {
   constructor(description: string) {
     super();
-    this.setColor(GirColors.success);
-    this.setDescription(`***${GirEmojis.success} ${description}***`);
+    this.setColor(GirColors.Success);
+    this.setDescription(`***${GirEmojis.Success} ${description}***`);
   }
 }
 
 export class FailEmbed extends EmbedBuilder {
   constructor(description: string) {
     super();
-    this.setColor(GirColors.fail);
-    this.setDescription(`${GirEmojis.fail} ${description}`);
+    this.setColor(GirColors.Fail);
+    this.setDescription(`${GirEmojis.Fail} ${description}`);
   }
 }
 
 export class LoadingEmbed extends EmbedBuilder {
   constructor(description: string) {
     super();
-    this.setColor(GirColors.default);
+    this.setColor(GirColors.Default);
     this.setAuthor({ name: pickRandom(RandomLoadingMessage) });
-    this.setDescription(`${GirEmojis.loading} ${description}`);
+    this.setDescription(`${GirEmojis.Loading} ${description}`);
   }
 }
 
 export class DefaultEmbed extends EmbedBuilder {
   constructor(description: string) {
     super();
-    this.setColor(GirColors.default);
+    this.setColor(GirColors.Default);
     this.setDescription(`${description}`);
   }
 }

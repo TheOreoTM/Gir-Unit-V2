@@ -37,7 +37,7 @@ export class UserCommand extends Command {
       misc: `• **Lines of code**: ${misc.lines}\n• **Files**: ${misc.files}`,
     };
 
-    return new EmbedBuilder().setColor(GirColors.default).setFields(
+    return new EmbedBuilder().setColor(GirColors.Default).setFields(
       {
         name: titles.stats,
         value: fields.stats,

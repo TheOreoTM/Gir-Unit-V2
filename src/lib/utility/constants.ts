@@ -1,4 +1,3 @@
-import type { ColorResolvable } from 'discord.js';
 import { join } from 'path';
 
 export const rootDir = join(__dirname, '..', '..');
@@ -21,31 +20,36 @@ export const CooldownFiltered = [...Owners];
 
 export const Prefix = '>';
 
-export const GirEmojis = {
-  'fail': '<:girfail:1093480740571852810>',
-  'success': '<:girsuccess:1093480744040534046>',
-  'coin': '🪙',
-  'prompt': '<:edit:1057359923421380608>',
-  'loading': '<:loading:1058130838702805002>',
-  'info': '<:info:908907864318423041>',
-};
+export const enum GirEmojis {
+  Fail = '<:girFail:1093480740571852810>',
+  Success = '<:girSuccess:1093480744040534046>',
+  Coin = '🪙',
+  Prompt = '<:edit:1057359923421380608>',
+  Loading = '<:loading:1058130838702805002>',
+  Info = '<:info:908907864318423041>',
+  Left = '◀️',
+  Right = '▶️',
+  Forward = '⏩',
+  Backward = '⏪',
+  Stop = '⏹️',
+}
 
-export const GirColors = {
-  success: 0x46b485 as ColorResolvable,
-  fail: 0xf05050 as ColorResolvable,
-  warn: 0xfee65c as ColorResolvable,
-  default: 0x2b2d31 as ColorResolvable,
-};
+export const enum GirColors {
+  Success = 0x46b485,
+  Fail = 0xf05050,
+  Warn = 0xfee65c,
+  Default = 0x2b2d31,
+}
 
 export const ModColors = {
-  mute: GirColors.warn,
-  warn: GirColors.warn,
-  ban: GirColors.fail,
-  softban: GirColors.fail,
-  kick: GirColors.fail,
-  unban: GirColors.success,
-  unmute: GirColors.success,
-  warn_remove: GirColors.success,
-  modnick: GirColors.warn,
+  mute: GirColors.Warn,
+  warn: GirColors.Warn,
+  ban: GirColors.Fail,
+  softban: GirColors.Fail,
+  kick: GirColors.Fail,
+  unban: GirColors.Success,
+  unmute: GirColors.Success,
+  warn_remove: GirColors.Success,
+  modnick: GirColors.Warn,
 };
 // Refactor the #constants and #config
