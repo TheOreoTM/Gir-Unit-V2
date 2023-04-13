@@ -1,7 +1,5 @@
-import { ClientConfig, MongoURI, Prefix } from '#config';
-import prefixSchema from '#lib/structures/schemas/prefix-schema';
+import { ClientConfig, MongoURI } from '#config';
 import { SapphireClient } from '@sapphire/framework';
-import type { Message } from 'discord.js';
 import type { Utils } from './structures';
 import { connectToMongo } from './utility';
 
@@ -18,14 +16,6 @@ export class GirClient<
   public override destroy(): void {
     return super.destroy();
   }
-
-  public override fetchPrefix = async (message: Message) => {
-    if (!message.guild) return Prefix;
-
-    const guild = await prefixSchema.findOne({ _id: message.guild.id });
-
-    return guild?.prefix ?? Prefix;
-  };
 }
 
 declare module '@sapphire/pieces' {

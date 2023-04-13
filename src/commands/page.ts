@@ -1,4 +1,11 @@
-import { GirCommand, GirPaginatedMessage } from '#lib/structures';
+import {
+  DefaultEmbed,
+  FailEmbed,
+  GirCommand,
+  GirPaginatedMessageEmbedFields,
+  LoadingEmbed,
+  SuccessEmbed,
+} from '#lib/structures';
 import { ApplyOptions } from '@sapphire/decorators';
 
 @ApplyOptions<GirCommand.Options>({
@@ -7,11 +14,11 @@ import { ApplyOptions } from '@sapphire/decorators';
 })
 export class UserCommand extends GirCommand {
   public async messageRun(message: GirCommand.Message) {
-    if (!message.member) return;
-    const msg = new GirPaginatedMessage()
-      .addPageContent('Test')
-      .addPageContent('test2');
-
-    return msg.run(message);
+    const embed = new GirPaginatedMessageEmbedFields()
+      .addPageEmbed(new SuccessEmbed('test1'))
+      .addPageEmbed(new FailEmbed('test2'))
+      .addPageEmbed(new DefaultEmbed('test3'))
+      .addPageEmbed(new LoadingEmbed('test4'));
+    await embed.run(message);
   }
 }
