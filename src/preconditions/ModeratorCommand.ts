@@ -28,7 +28,7 @@ export class UserPermissionsPrecondition extends PermissionsPrecondition {
       ? this.ok()
       : this.error({
           identifier: `staffError`,
-          message: `This command is only for trainee staff members`,
+          message: `This command is only for member of the staff team`,
         });
   }
 }

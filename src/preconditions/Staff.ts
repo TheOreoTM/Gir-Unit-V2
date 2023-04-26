@@ -20,8 +20,8 @@ export class UserPermissionsPrecondition extends PermissionsPrecondition {
     return allowed
       ? this.ok()
       : this.error({
-          identifier: `Not a staff`,
-          message: `This command is only for staffs`,
+          identifier: `staffError`,
+          message: `This command is only for staff members`,
         });
   }
 }

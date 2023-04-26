@@ -1,4 +1,10 @@
-import { GirEvents, type BaseModActionData, type modAction } from '#lib/types';
+import {
+  BaseModActionData,
+  GirEvents,
+  ModlogData,
+  type modAction,
+} from '#lib/types';
+import { nextCase } from '#lib/utility';
 import { container } from '@sapphire/framework';
 import type { Guild, GuildMember, Snowflake } from 'discord.js';
 import modlogsSchema from '../schemas/modlogs-schema';
@@ -18,14 +24,7 @@ export class Modlog {
     action,
     reason,
     length,
-  }: {
-    guild: Guild;
-    member: GuildMember;
-    staff: GuildMember;
-    action: modAction;
-    reason: string;
-    length?: number | null;
-  }) {
+  }: ModlogData) {
     this.guild = guild;
     this.member = member;
     this.staff = staff;
@@ -35,9 +34,7 @@ export class Modlog {
   }
 
   public async create(): Promise<any> {
-    const caseNum =
-      (await modlogsSchema.countDocuments({ guildId: this.guild!.id })) + 1;
-    this.case = caseNum.toString();
+    this.case = await nextCase(this.guild);
 
     const modlog = await modlogsSchema.create({
       guildId: this.guild!.id,
@@ -51,13 +48,17 @@ export class Modlog {
       case: this.case,
     });
 
-    const data: BaseModActionData = {
-      staff: this.staff,
-      user: this.member,
+    const data = {
+      staffId: this.staff.id,
+      staffTag: this.staff.user.tag,
+      memberId: this.member.id,
+      memberTag: this.member.user.tag,
       action: this.action,
       caseNum: this.case,
       reason: this.reason,
-    };
+      guildId: this.guild.id,
+      length: this.length,
+    } as BaseModActionData;
 
     container.client.emit(GirEvents.ModAction, data);
 

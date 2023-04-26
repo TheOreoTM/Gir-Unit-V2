@@ -1,10 +1,10 @@
 import { Owners } from '#constants';
-import type { GuildMember, User } from 'discord.js';
+import { GuildMember, PermissionFlagsBits, User } from 'discord.js';
 
 export function isAdmin(member: GuildMember): boolean {
   return (
-    member.permissions.has('Administrator') ||
-    member.permissions.has('ManageGuild')
+    member.permissions.has(PermissionFlagsBits.Administrator) ||
+    member.permissions.has(PermissionFlagsBits.ManageGuild)
   );
 }
 

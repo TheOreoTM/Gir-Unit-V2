@@ -1,20 +1,14 @@
-import { sec } from '#lib/utility';
-import { Command } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import { GirCommand } from '#lib/structures';
+import { ApplyOptions } from '@sapphire/decorators';
+import { reply } from '@sapphire/plugin-editable-commands';
 
-export class PingCommand extends Command {
-  public constructor(context: Command.Context, options: Command.Options) {
-    super(context, {
-      ...options,
-      name: 'ping',
-      aliases: ['pong'],
-      description: 'ping pong',
-      cooldownDelay: sec(10),
-      cooldownLimit: 1,
-    });
-  }
-  public async messageRun(message: Message) {
-    const msg = await message.reply('Ping');
+@ApplyOptions<GirCommand.Options>({
+  description: 'A basic command',
+  name: 'ping',
+})
+export class pingCommand extends GirCommand {
+  public async messageRun(message: GirCommand.Message) {
+    const msg = await reply(message, 'Ping');
     const ping = Math.floor(message.client.ws.ping);
 
     msg.edit(`Ping \`${ping}ms\``);

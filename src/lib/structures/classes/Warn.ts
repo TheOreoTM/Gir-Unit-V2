@@ -40,7 +40,7 @@ export class Warn {
     };
     const caseData = new Modlog(data);
     await caseData.create();
-    this.case = caseData.case || '1';
+    this.case = caseData.case;
     return caseData;
   }
 }

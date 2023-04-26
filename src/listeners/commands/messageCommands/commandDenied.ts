@@ -1,3 +1,4 @@
+import { FailEmbed } from '#lib/structures';
 import { format, sendTemporaryMessage } from '#lib/utility';
 import {
   Listener,
@@ -48,7 +49,9 @@ export class CommandDenied extends Listener {
         } to run this command`,
       });
     } else {
-      return await message.reply(error.message);
+      return await sendTemporaryMessage(message, {
+        embeds: [new FailEmbed(error.message).setTitle(error.identifier)],
+      });
     }
   }
 }

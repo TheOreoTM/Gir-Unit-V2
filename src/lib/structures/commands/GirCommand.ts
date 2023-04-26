@@ -4,19 +4,17 @@ import type { GuildSettings } from '#lib/structures';
 import { PermissionLevels, type GuildMessage } from '#lib/types';
 import {
   ApplicationCommandRegistry,
+  Args as SapphireArgs,
   Command,
   CommandOptionsRunTypeEnum,
   PreconditionContainerArray,
-  Args as SapphireArgs,
   UserError,
-  type ChatInputCommandContext,
-  type ContextMenuCommandContext,
   type MessageCommandContext,
 } from '@sapphire/framework';
 import {
   AutocompleteInteraction,
-  ContextMenuCommandInteraction as CTXMenuCommandInteraction,
   ChatInputCommandInteraction as ChatInputInteraction,
+  ContextMenuCommandInteraction as CTXMenuCommandInteraction,
   MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
   PermissionFlagsBits,
   PermissionsBitField,
@@ -147,10 +145,8 @@ export namespace GirCommand {
   export type MessageContextMenuCommandInteraction =
     MessageCTXCommandInteraction<'cached'>;
   export type AutoComplete = AutocompleteInteraction;
-  export type Context =
-    | ChatInputCommandContext
-    | ContextMenuCommandContext
-    | Command.Context;
+  export type Context = Command.Context;
+
   export type Args = SapphireArgs;
   export type Message = GuildMessage;
   export type Registry = ApplicationCommandRegistry;
@@ -164,6 +160,7 @@ declare module '@sapphire/framework' {
     Staff: never;
     Moderator: never;
     Administrator: never;
+    ModeratorCommand: never;
     ServerOwner: never;
     Community: never;
   }

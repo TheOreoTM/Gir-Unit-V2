@@ -14,7 +14,7 @@ export class UserPermissionsPrecondition extends PermissionsPrecondition {
     return allowed
       ? this.ok()
       : this.error({
-          identifier: `Error`,
+          identifier: `staffError`,
           message: `This command is only for admins`,
         });
   }

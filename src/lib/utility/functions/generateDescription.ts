@@ -1,4 +1,5 @@
 import { ModColors } from '#constants';
+import type { FakeUser } from '#lib/structures';
 import type { modAction } from '#lib/types';
 import { EmbedBuilder, GuildMember, User } from 'discord.js';
 import { ms } from 'enhanced-ms';
@@ -11,16 +12,17 @@ export function generateModLogEmbed({
   caseNum,
   length,
 }: {
-  member: GuildMember | User;
-  staff: GuildMember | User;
+  member: GuildMember | User | FakeUser;
+  staff: GuildMember | User | FakeUser;
   action: modAction;
   caseNum: string;
   reason: string;
-  length?: number;
+  length?: number | null;
 }) {
   const formattedAction = actions[action];
   const memberTag =
     member instanceof GuildMember ? member.user.tag : member.tag;
+  staff instanceof GuildMember ? staff.user.tag : staff.tag;
 
   const embed = new EmbedBuilder()
     .setColor(ModColors[action])
@@ -40,7 +42,7 @@ export function generateModLogEmbed({
       }
     );
 
-  if (length) {
+  if (length && !isNaN(length)) {
     embed.addFields({
       inline: true,
       name: 'Length',

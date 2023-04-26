@@ -10,7 +10,6 @@
       "#lib/*": ["lib/*"],
       "#root/*": ["*"]
     },
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
     "esModuleInterop": true,
     "ignoreDeprecations": "5.0"
   },

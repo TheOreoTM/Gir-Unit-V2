@@ -1,11 +1,15 @@
-import type { Guild, GuildMember, User } from 'discord.js';
+import type { Guild, GuildMember } from 'discord.js';
 
 export interface BaseModActionData {
-  staff: GuildMember;
-  user: GuildMember | User;
+  guildId: string;
+  memberId: string;
+  memberTag: string;
+  staffId: string;
+  staffTag: string;
   action: modAction;
   caseNum: string;
   reason: string;
+  length?: number;
 }
 
 export type modAction =
@@ -26,17 +30,18 @@ export type modAction =
 // | 'message_bulk_delete'
 // |
 
-export interface WarnActionData {
+export interface WarnActionData extends BaseModActionData {
   _id: string; // Warn Id
-  guildId: string;
-  memberId: string;
-  memberTag: string;
-  staffId: string;
-  staffTag: string;
-  reason: string;
-  case: string;
-  createdAt: NativeDate;
-  updatedAt: NativeDate;
+}
+
+export interface PunishmentActionData extends BaseModActionData {
+  expires: NativeDate;
+  type: PunishmentType;
+}
+
+export interface TaskOptions {
+  pattern?: string;
+  enabled?: boolean;
 }
 
 export interface ModlogData {
@@ -45,5 +50,11 @@ export interface ModlogData {
   staff: GuildMember;
   action: modAction;
   reason: string;
-  length?: number;
+  length?: number | null;
+}
+
+export enum PunishmentType {
+  Ban = 'ban',
+  Mute = 'mute',
+  Warn = 'warn',
 }

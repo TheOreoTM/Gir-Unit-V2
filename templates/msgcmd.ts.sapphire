@@ -14,7 +14,7 @@ export class {{name}}Command extends GirCommand {
     message: GirCommand.Message,
     args: GirCommand.Args
   ) {
-    const arg1 = await args.pick('string');
-    return message.channel.send(arg1);
+    const target = await args.pick('member');
+    return target
   }
 }

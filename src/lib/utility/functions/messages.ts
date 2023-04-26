@@ -1,10 +1,38 @@
-import { Time } from '@sapphire/duration';
-import { send, type MessageOptions } from '@sapphire/plugin-editable-commands';
-import { sleep } from '@sapphire/utilities';
-import type { Message } from 'discord.js';
+import type { GirCommand } from '#lib/structures';
+import { floatPromise, mins, resolveOnErrorCodes, sec } from '#lib/utility';
+import { send } from '@sapphire/plugin-editable-commands';
+import { RESTJSONErrorCodes } from 'discord-api-types/v9';
+import type { Message, MessageCreateOptions } from 'discord.js';
+import { setTimeout as sleep } from 'node:timers/promises';
+
+const messageCommands = new WeakMap<Message, GirCommand>();
+
+/**
+ * Sets or resets the tracking status of a message with a command.
+ * @param message The message to track.
+ * @param command The command that was run with the given message, if any.
+ */
+export function setCommand(message: Message, command: GirCommand | null) {
+  if (command === null) messageCommands.delete(message);
+  else messageCommands.set(message, command);
+}
+
+/**
+ * Gets the tracked command from a message.
+ * @param message The message to get the command from.
+ * @returns The command that was run with the given message, if any.
+ */
+export function getCommand(message: Message): GirCommand | null {
+  return messageCommands.get(message) ?? null;
+}
 
 async function deleteMessageImmediately(message: Message): Promise<Message> {
-  return message.deletable ? message.delete() : message;
+  return (
+    (await resolveOnErrorCodes(
+      message.delete(),
+      RESTJSONErrorCodes.UnknownMessage
+    )) ?? message
+  );
 }
 
 /**
@@ -20,14 +48,14 @@ export async function deleteMessage(
   message: Message,
   time = 0
 ): Promise<Message> {
-  if (!message.deletable) return message;
+  if (!message) return message;
   if (time === 0) return deleteMessageImmediately(message);
 
   const lastEditedTimestamp = message.editedTimestamp;
   await sleep(time);
 
   // If it was deleted or edited, cancel:
-  if (!message.deletable || message.editedTimestamp !== lastEditedTimestamp) {
+  if (!message || message.editedTimestamp !== lastEditedTimestamp) {
     return message;
   }
 
@@ -43,12 +71,35 @@ export async function deleteMessage(
  */
 export async function sendTemporaryMessage(
   message: Message,
-  options: string | MessageOptions,
-  timer = Time.Second * 7
+  options: string | MessageCreateOptions,
+  timer = sec(8)
 ): Promise<Message> {
   if (typeof options === 'string') options = { content: options };
 
   const response = (await send(message, options)) as Message;
-  deleteMessage(response, timer);
+  floatPromise(deleteMessage(response, timer));
   return response;
+}
+
+/**
+ * Sends a boolean confirmation prompt asking the `target` for either of two choices.
+ * @param message The message to ask for a confirmation from.
+ * @param options The options for the message to be sent, alongside the prompt options.
+ * @returns `null` if no response was given within the requested time, `boolean` otherwise.
+ */
+
+export async function promptForMessage(
+  message: Message,
+  sendOptions: string | MessageCreateOptions,
+  time = mins(1)
+): Promise<string | null> {
+  const response = await message.channel.send(sendOptions);
+  const responses = await message.channel.awaitMessages({
+    filter: (msg) => msg.author === message.author,
+    time,
+    max: 1,
+  });
+  floatPromise(deleteMessage(response));
+
+  return responses.size === 0 ? null : responses.first()!.content;
 }

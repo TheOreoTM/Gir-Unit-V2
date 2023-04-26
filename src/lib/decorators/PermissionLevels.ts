@@ -63,7 +63,7 @@ export const PermissionLevel = (level: PermissionLevel): MethodDecorator => {
           });
         return mod;
       case 'Staff':
-        error = `This command is only for staffs`;
+        error = `This command is only for staff member`;
         if (!staff)
           throw new UserError({
             identifier: 'PermissionLevelError',
@@ -71,7 +71,7 @@ export const PermissionLevel = (level: PermissionLevel): MethodDecorator => {
           });
         return staff;
       case 'Trainee':
-        error = `This command is only for Trainees`;
+        error = `This command is only for trainee staff members`;
         if (!mod)
           throw new UserError({
             identifier: 'PermissionLevelError',

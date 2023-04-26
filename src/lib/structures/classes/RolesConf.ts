@@ -1,5 +1,5 @@
 import type { Guild } from 'discord.js';
-import staffRolesShema from '../schemas/staffRoles-shema';
+import staffRolesShema from '../schemas/staffRoles-schema';
 
 export class RolesConfig {
   public constructor(private readonly guild: Guild) {
