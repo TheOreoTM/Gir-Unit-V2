@@ -34,3 +34,11 @@ export class DefaultEmbed extends EmbedBuilder {
     this.setDescription(`${description}`);
   }
 }
+
+export class InfoEmbed extends EmbedBuilder {
+  constructor(description: string) {
+    super();
+    this.setColor(GirColors.Default);
+    this.setDescription(`${GirEmojis.Info} ${description}`);
+  }
+}

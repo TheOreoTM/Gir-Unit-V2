@@ -23,7 +23,7 @@ export class UserListener extends Listener {
     const channel = await guild.logging?.moderation;
     if (!channel) return;
 
-    const user = guild.members.cache.get(data.memberId);
+    const user = guild.members.cache.get(data.userId);
     const staff = guild.members.cache.get(data.staffId);
     const embed = generateModLogEmbed({
       action: data.action,

@@ -1,9 +1,7 @@
 import { ClientConfig, MongoURI } from '#config';
-import { ExpiredWarnTask } from '#root/features';
-
 import { SapphireClient } from '@sapphire/framework';
 import '@sapphire/plugin-logger/register';
-
+import '@sapphire/plugin-subcommands/register';
 import type { Utils } from './structures';
 import { connectToMongo } from './utility';
 
@@ -15,8 +13,6 @@ export class GirClient<
   }
   public override async login(token?: string): Promise<string> {
     await connectToMongo(MongoURI);
-    new ExpiredWarnTask();
-
     return super.login(token);
   }
   public override destroy(): void {

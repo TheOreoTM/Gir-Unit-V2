@@ -16,7 +16,7 @@ const modlogsSchema = new Schema(
     action: reqString,
     reason: reqString,
     length: { type: Number || null },
-    case: reqString,
+    caseNum: reqString,
   },
   {
     timestamps: true,

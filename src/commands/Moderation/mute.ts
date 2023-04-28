@@ -1,4 +1,5 @@
-import { FailEmbed, GirCommand, Mute } from '#lib/structures';
+import { FailEmbed, GirCommand, Mute, SuccessEmbed } from '#lib/structures';
+import { PermissionLevels } from '#lib/types';
 import { checkModeratable } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -6,6 +7,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 @ApplyOptions<GirCommand.Options>({
   description: 'A basic command',
   name: 'mute',
+  permissionLevel: PermissionLevels.Staff,
 })
 export class muteCommand extends GirCommand {
   public override async messageRun(
@@ -47,8 +49,16 @@ export class muteCommand extends GirCommand {
     // });
 
     const mute = new Mute({ reason, staff: message.member, target, duration });
-    await mute.init();
+    await mute.create();
 
-    return await send(message, { content: `${JSON.stringify(mute, null, 2)}` });
+    return await send(message, {
+      embeds: [
+        new SuccessEmbed(
+          `${target.user.tag} was muted ${
+            reason !== 'No reason' ? `| ${reason}` : ''
+          }`
+        ),
+      ],
+    });
   }
 }

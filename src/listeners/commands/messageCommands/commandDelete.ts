@@ -13,6 +13,7 @@ export class UserListener extends Listener {
 
     const response = get(message);
     if (!response) return;
+    if (!response.deletable) return;
 
     return response.deletable ? response.delete() : null;
   }

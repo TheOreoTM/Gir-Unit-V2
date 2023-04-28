@@ -1,6 +1,7 @@
-import type { ModlogData } from '#lib/types';
+import { ModlogData, PunishmentType } from '#lib/types';
 import { UserError } from '@sapphire/framework';
 import type { Guild, GuildMember } from 'discord.js';
+import punishmentSchema from '../schemas/punishment-schema';
 import { Modlog } from './Modlog';
 
 export class Mute {
@@ -12,7 +13,7 @@ export class Mute {
   staffTag: string;
   reason: string;
   duration: number | null;
-  case: string = '';
+  caseNum: string = '';
   public constructor({
     target,
     staff,
@@ -29,14 +30,14 @@ export class Mute {
     this.memberTag = target.user.tag;
     this.staffId = staff.id;
     this.staffTag = staff.user.tag;
-    this.reason = reason;
+    this.reason = reason ? reason : 'No reason';
     this.duration = duration ? duration : NaN;
 
     const guild = staff.guild;
     if (!guild) throw 'Something went wrong';
     this.guild = guild;
   }
-  public async init() {
+  public async create() {
     const member = this.guild.members.cache.get(this.memberId);
     let error: string = '';
     if (!member) {
@@ -56,7 +57,32 @@ export class Mute {
       throw new UserError({ identifier: 'PermissionError', message: error });
     });
 
-    return await this.generateModlog();
+    await this.generateModlog();
+
+    // If is temporary
+    if (this.duration) {
+      let expires: Date;
+      expires = new Date();
+      expires.setMilliseconds(expires.getMilliseconds() + this.duration);
+      await punishmentSchema.findOneAndUpdate(
+        {
+          userId: this.memberId,
+          guildId: this.guildId,
+          type: PunishmentType.Mute,
+        },
+        {
+          userId: this.memberId,
+          guildId: this.guildId,
+          staffId: this.staffId,
+          type: PunishmentType.Mute,
+          expires: expires,
+          caseNum: this.caseNum,
+        },
+        {
+          upsert: true,
+        }
+      );
+    }
   }
 
   private async generateModlog() {
@@ -72,7 +98,7 @@ export class Mute {
     };
     const caseData = new Modlog(data);
     await caseData.create();
-    this.case = caseData.case;
+    this.caseNum = caseData.caseNum;
     return caseData;
   }
 }

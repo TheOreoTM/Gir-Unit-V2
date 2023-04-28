@@ -49,7 +49,7 @@ export class Modnick {
     const log = new Modlog(modlogData);
     await log.create();
 
-    return { identifier: identifier, caseNum: log.case };
+    return { identifier: identifier, caseNum: log.caseNum };
   }
 
   public async get(userId: Snowflake) {

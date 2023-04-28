@@ -10,7 +10,7 @@ const punishmentSchema = new Schema(
     userId: reqString,
     guildId: reqString,
     staffId: reqString,
-    expires: Date,
+    expires: { type: Date, required: true },
     caseNum: { type: Number, required: true },
     type: {
       type: String,

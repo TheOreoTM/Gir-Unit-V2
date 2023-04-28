@@ -1,5 +1,19 @@
 import type { PermissionsString } from 'discord.js';
 /**
+ * It takes a sentence and return a string of every words first letter capitalized
+ * @param {string} sentence The initial sentence
+ * @returns {string} The capitalized sentence
+ * @example
+ * capitalizeWords('hello world!') -> 'Hello World!'
+ */
+export function capitalizeWords(sentence: string) {
+  return sentence
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+/**
  * It takes an array of strings, splits each string by underscores, capitalizes the first letter of
  * each word, and joins them back together
  * @param {string[]} perm - The array of strings to format.

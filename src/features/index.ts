@@ -1,1 +1,1 @@
-export * from './expiredPunishments';
+export * from './expiredMutes';

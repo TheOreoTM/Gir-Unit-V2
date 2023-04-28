@@ -5,7 +5,7 @@ import * as utils from '#lib/utility';
 // console.log(countlines('src'), utils.countlines('src'));
 
 export class Utils {
-  public countlines = utils.countlines; // utils.countlines doesnt work
+  public countlines = utils.countlines;
   public formatDuration = utils.formatDuration;
   public generateModlogEmbed = utils.generateModLogEmbed;
   public isAdmin = utils.isAdmin;
@@ -23,6 +23,10 @@ export class Utils {
   public format = utils.format;
   public summableArray = utils.summableArray;
   public wait = utils.wait;
+  public connectToMongo = utils.connectToMongo;
+  public genRandomInt = utils.genRandomInt;
+  public genRandomFloat = utils.genRandomFloat;
+  public capitalizeWords = utils.capitalizeWords;
 
   public constructor(private readonly client: GirClient) {}
 

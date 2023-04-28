@@ -2,8 +2,8 @@ import type { Guild, GuildMember } from 'discord.js';
 
 export interface BaseModActionData {
   guildId: string;
-  memberId: string;
-  memberTag: string;
+  userId: string;
+  userTag: string;
   staffId: string;
   staffTag: string;
   action: modAction;
@@ -40,7 +40,7 @@ export interface PunishmentActionData extends BaseModActionData {
 }
 
 export interface TaskOptions {
-  pattern?: string;
+  pattern: string;
   enabled?: boolean;
 }
 

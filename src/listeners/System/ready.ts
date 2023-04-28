@@ -2,6 +2,7 @@ import type { GirClient } from '#lib/GirClient';
 import { GuildSettings, Utils } from '#lib/structures';
 import { Logging } from '#lib/structures/classes/Logging';
 import { GirEvents } from '#lib/types';
+import { ExpiredMuteTask } from '#root/features';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener, Piece, Store } from '@sapphire/framework';
 import {
@@ -35,6 +36,9 @@ export class UserListener extends Listener {
       guild.settings = new GuildSettings(guild);
       guild.logging = new Logging(guild);
     }
+
+    // Enabled features
+    new ExpiredMuteTask();
   }
 
   private get isDev() {

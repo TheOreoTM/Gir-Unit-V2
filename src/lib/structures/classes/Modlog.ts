@@ -14,9 +14,9 @@ export class Modlog {
   member: GuildMember;
   staff: GuildMember;
   action: modAction;
-  reason: string;
+  reason: string | null;
   length?: number | null;
-  case: string = '';
+  caseNum: string = '';
   public constructor({
     guild,
     member,
@@ -29,12 +29,12 @@ export class Modlog {
     this.member = member;
     this.staff = staff;
     this.action = action;
-    this.reason = reason.length !== 0 ? reason : 'No reason';
+    this.reason = reason ? reason : 'No reason';
     this.length = length ? length : null;
   }
 
   public async create(): Promise<any> {
-    this.case = await nextCase(this.guild);
+    this.caseNum = await nextCase(this.guild);
 
     const modlog = await modlogsSchema.create({
       guildId: this.guild!.id,
@@ -45,16 +45,16 @@ export class Modlog {
       reason: this.reason,
       length: this.length ? this.length : null,
       action: this.action,
-      case: this.case,
+      caseNum: this.caseNum,
     });
 
     const data = {
       staffId: this.staff.id,
       staffTag: this.staff.user.tag,
-      memberId: this.member.id,
-      memberTag: this.member.user.tag,
+      userId: this.member.id,
+      userTag: this.member.user.tag,
       action: this.action,
-      caseNum: this.case,
+      caseNum: this.caseNum,
       reason: this.reason,
       guildId: this.guild.id,
       length: this.length,
@@ -68,7 +68,7 @@ export class Modlog {
   public async getOne(caseNum: string): Promise<any | null> {
     const data = await modlogsSchema.findOne({
       guildId: this.guild.id,
-      case: caseNum,
+      caseNum: caseNum,
     });
 
     if (!data) return null;

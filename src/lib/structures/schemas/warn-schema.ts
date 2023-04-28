@@ -9,12 +9,12 @@ const warnSchema = new Schema(
   {
     _id: reqString, // Warn Id
     guildId: reqString,
-    memberId: reqString,
-    memberTag: reqString,
+    userId: reqString,
+    userTag: reqString,
     staffId: reqString,
     staffTag: reqString,
     reason: reqString,
-    case: reqString,
+    caseNum: reqString,
   },
   {
     timestamps: true,
