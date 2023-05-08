@@ -1,8 +1,9 @@
+import { ZeroWidthSpace } from '#constants';
 import type { GirCommand } from '#lib/structures';
 import { floatPromise, mins, resolveOnErrorCodes, sec } from '#lib/utility';
 import { send } from '@sapphire/plugin-editable-commands';
 import { RESTJSONErrorCodes } from 'discord-api-types/v9';
-import type { Message, MessageCreateOptions } from 'discord.js';
+import type { Guild, Message, MessageCreateOptions } from 'discord.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 const messageCommands = new WeakMap<Message, GirCommand>();
@@ -77,7 +78,8 @@ export async function sendTemporaryMessage(
   if (typeof options === 'string') options = { content: options };
 
   const response = (await send(message, options)) as Message;
-  floatPromise(deleteMessage(response, timer));
+  // floatPromise(deleteMessage(response, timer)); // No need for this because when message gets deleted so does the command reponse
+  floatPromise(deleteMessage(message, timer));
   return response;
 }
 
@@ -102,4 +104,30 @@ export async function promptForMessage(
   floatPromise(deleteMessage(response));
 
   return responses.size === 0 ? null : responses.first()!.content;
+}
+
+export function cleanMentions(guild: Guild, input: string) {
+  return input
+    .replace(/@(here|everyone)/g, `@${ZeroWidthSpace}$1`)
+    .replace(/<(@[!&]?|#)(\d{17,19})>/g, (match, type, id) => {
+      switch (type) {
+        case '@':
+        case '@!': {
+          const tag = guild.client.users.cache.get(id);
+          return tag ? `@${tag.username}` : `<${type}${ZeroWidthSpace}${id}>`;
+        }
+        case '@&': {
+          const role = guild.roles.cache.get(id);
+          return role ? `@${role.name}` : match;
+        }
+        case '#': {
+          const channel = guild.channels.cache.get(id);
+          return channel
+            ? `#${channel.name}`
+            : `<${type}${ZeroWidthSpace}${id}>`;
+        }
+        default:
+          return `<${type}${ZeroWidthSpace}${id}>`;
+      }
+    });
 }

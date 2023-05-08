@@ -11,14 +11,17 @@ const reqNumber = {
   default: 0,
 };
 
-const petDataSchema = new Schema({
-  userId: reqString,
-  silence: { type: Boolean },
+const petDataSchema = new Schema(
+  {
+    userId: reqString,
+    silence: { type: Boolean },
 
-  selectedId: { type: String },
-  nextIdx: reqNumber,
+    selectedId: { type: String },
+    nextIdx: reqNumber,
 
-  orderBy: { type: Object, required: true, default: { idx: 1 } }, // number-
-});
+    orderBy: { type: Object, required: true, default: { idx: 1 } }, // number-
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model('petUser', petDataSchema, 'petUser');

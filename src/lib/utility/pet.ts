@@ -1,6 +1,6 @@
 import { BasePetStat, PetMoveTypes, PetStatTypes } from '#lib/types';
 
-export const moves = {
+const moves = {
   taser: {
     id: '1',
     name: 'Taser',
@@ -149,7 +149,7 @@ export const moves = {
   },
 };
 
-export const petData: BasePetStat[] = [
+export const PetArray: BasePetStat[] = [
   {
     id: '1',
     name: 'gir',
@@ -224,6 +224,7 @@ export const petData: BasePetStat[] = [
       moves.telekinesis,
       moves.psychoOrb,
     ],
+    hasMega: true,
     mega: {
       id: '105',
       requirement: '',
@@ -247,3 +248,6 @@ export const petData: BasePetStat[] = [
     isMega: true,
   },
 ];
+
+export const PetMoves = new Map(Object.entries(moves));
+export const PetData = new Map(Object.entries(PetArray));

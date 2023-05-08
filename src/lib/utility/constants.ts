@@ -3,6 +3,9 @@ import { join } from 'path';
 export const rootDir = join(__dirname, '..', '..');
 export const srcDir = join(rootDir, 'src');
 
+export const ZeroWidthSpace = '\u200B';
+export const LongWidthSpace = '\u3000';
+
 export const RandomLoadingMessage = [
   'Computing...',
   'Thinking...',
@@ -55,3 +58,6 @@ export const ModColors = {
 
 export const RecommendedPermissions = 543276137727n;
 export const RecommendedPermissionsWithoutAdmin = 543276137719n;
+
+export const PetShinyChance = 1 / 1024;
+export const PetUrl = 'https://gir.up.railway.app/pet/';

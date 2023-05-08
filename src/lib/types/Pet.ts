@@ -8,6 +8,7 @@ export interface BasePetStat {
     requirement: string;
   };
   isMega?: boolean;
+  hasMega?: boolean;
 }
 
 export interface PetBaseStat {

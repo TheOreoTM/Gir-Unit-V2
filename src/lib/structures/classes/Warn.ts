@@ -1,4 +1,4 @@
-import type { modAction } from '#lib/types';
+import { ModActions } from '#lib/types';
 import { uid } from '#lib/utility';
 import type { Guild, GuildMember } from 'discord.js';
 import warnSchema from '../schemas/warn-schema';
@@ -36,7 +36,7 @@ export class Warn {
       guild: guild,
       member: member,
       staff: staff,
-      action: 'warn' as modAction,
+      action: ModActions.Warn,
       reason: this.reason,
     };
     const caseData = new Modlog(data);

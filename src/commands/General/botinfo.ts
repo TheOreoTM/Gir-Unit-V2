@@ -1,17 +1,21 @@
 import { GirColors } from '#constants';
-import { Timestamp } from '#lib/structures';
+import { GirCommand, Timestamp } from '#lib/structures';
 import { countlines } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, version as sapphireVersion } from '@sapphire/framework';
+import { version as sapphireVersion } from '@sapphire/framework';
 import { roundNumber } from '@sapphire/utilities';
 import { EmbedBuilder, Message, version } from 'discord.js';
 import { uptime } from 'node:os';
 
-@ApplyOptions<Command.Options>({
+@ApplyOptions<GirCommand.Options>({
   description: 'View stats about the bot',
   name: 'botinfo',
+  detailedDescription: {
+    examples: ['botinfo'],
+    usage: 'botinfo',
+  },
 })
-export class UserCommand extends Command {
+export class UserCommand extends GirCommand {
   public override messageRun(message: Message) {
     return message.channel.send({
       embeds: [this.statsEmbed()],

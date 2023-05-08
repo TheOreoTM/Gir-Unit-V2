@@ -6,13 +6,25 @@ export interface BaseModActionData {
   userTag: string;
   staffId: string;
   staffTag: string;
-  action: modAction;
+  action: ModAction;
   caseNum: string;
   reason: string;
   length?: number;
 }
 
-export type modAction =
+export enum ModActions {
+  Kick = 'kick',
+  Ban = 'ban',
+  Softban = 'softban',
+  Unban = 'unban',
+  Warn = 'warn',
+  Unwarn = 'warn_remove',
+  Mute = 'mute',
+  Unmute = 'unmute',
+  Modnick = 'modnick',
+}
+
+export type ModAction =
   | 'kick'
   | 'ban'
   | 'softban'
@@ -44,11 +56,24 @@ export interface TaskOptions {
   enabled?: boolean;
 }
 
+export interface WarnOptions {
+  staff: GuildMember;
+  reason: string;
+}
+
+export interface MuteOptions {
+  staff: GuildMember;
+  reason?: string;
+  /**
+   * In milliseconds
+   */
+}
+
 export interface ModlogData {
   guild: Guild;
   member: GuildMember;
   staff: GuildMember;
-  action: modAction;
+  action: ModAction;
   reason: string;
   length?: number | null;
 }

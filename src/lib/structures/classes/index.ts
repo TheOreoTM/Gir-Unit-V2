@@ -13,6 +13,8 @@ export * from './Modlog';
 export * from './Modnick';
 export * from './Mute';
 export * from './Page';
+export * from './Pet';
+export * from './PetEmbed';
 export * from './RolesConf';
 export * from './Row';
 export * from './Task';

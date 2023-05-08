@@ -10,6 +10,7 @@ import type {
   GuildBasedChannel,
   GuildMember,
   Message,
+  MessageInteraction,
   Role,
   TextChannel,
 } from 'discord.js';
@@ -55,4 +56,11 @@ export interface GuildCommandInteractionOptionResolver
 export interface GirButtonInteraction extends ButtonInteraction {
   readonly message: Message;
   client: GirClient<true>;
+}
+
+export interface GuildMessageInteraction extends MessageInteraction {
+  client: GirClient<true>;
+  readonly guildId: string;
+  readonly guild: Guild;
+  readonly message: GuildMessage;
 }

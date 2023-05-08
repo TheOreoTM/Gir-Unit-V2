@@ -1,7 +1,7 @@
 import { Argument } from '@sapphire/framework';
 import { ms } from 'enhanced-ms';
 
-export class UserArgument extends Argument {
+export class durationArgument extends Argument {
   public run(parameter: string, context: Argument.Context) {
     const duration = ms(parameter);
 
@@ -33,11 +33,5 @@ export class UserArgument extends Argument {
     }
 
     return this.ok(duration);
-  }
-}
-
-declare module '@sapphire/framework' {
-  interface ArgType {
-    duration: number;
   }
 }

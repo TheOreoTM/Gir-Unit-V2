@@ -11,14 +11,17 @@ import {
   LoadingEmbed,
   SuccessEmbed,
 } from '#lib/structures';
-import { mention } from '#lib/utility';
+import { mention, sec } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
+import { BucketScope } from '@sapphire/framework';
 import { send, track } from '@sapphire/plugin-editable-commands';
 import { ChannelType, PermissionFlagsBits, type Guild } from 'discord.js';
 
 @ApplyOptions<GirCommand.Options>({
   description: 'A basic command',
   name: 'debug',
+  cooldownDelay: sec(20),
+  cooldownScope: BucketScope.Guild,
 })
 export class debugCommand extends GirCommand {
   readonly #SelectMessages = [
@@ -29,7 +32,6 @@ export class debugCommand extends GirCommand {
       'The per channel perms especially for locking mechanism',
     ],
     ['Roles', 'The amount of roles in server'],
-    ['Role Hierarchy', 'The order of roles in server'],
   ];
 
   readonly #Counts = {
@@ -64,8 +66,7 @@ export class debugCommand extends GirCommand {
     results.push(await this.setupCheck(message));
     results.push(await this.guildPermissions(message));
     results.push(await this.perChannelPermissions(message));
-    results.push(await this.roleCheck(message));
-    results.push(await this.roleHierarchy(message));
+    results.push(await this.role(message));
 
     results.forEach((r, i) => {
       const color = r.includes(GirEmojis.Fail)
@@ -85,6 +86,78 @@ export class debugCommand extends GirCommand {
     return;
   }
 
+  private async role(message: GirCommand.Message) {
+    await send(message, {
+      embeds: [new LoadingEmbed(`Checking Roles...`)],
+    });
+
+    const { guild, client } = message;
+    const notes: string[] = [];
+    const roles = (await guild.roles.fetch()).filter((r) => !r.managed);
+    const { everyone } = guild.roles;
+    const admins = roles.filter((r) =>
+      r.permissions.has(PermissionFlagsBits.Administrator)
+    ).size;
+    const totalRoles = roles.size;
+
+    const counts = this.getRecommendedCounts(guild);
+
+    const size = (max: number, cur: number, min: number) =>
+      Math.min(max - cur, cur - min) === max - cur ? '__High__' : '__Low__';
+
+    if (!this.range(counts.Admins.max, admins, counts.Admins.min))
+      notes.push(
+        this.note(
+          `Too ${size(
+            counts.Admins.max,
+            admins,
+            counts.Admins.min
+          )} [**${admins}**] amount of Roles with Administrator Permissions!`
+        )
+      );
+    if (!this.range(counts.Roles.max, totalRoles, counts.Roles.min))
+      notes.push(
+        this.note(
+          `Too ${size(
+            counts.Roles.max,
+            totalRoles,
+            counts.Roles.min
+          )} [**${totalRoles}**] amount of Roles in Server!`
+        )
+      );
+
+    if (everyone.permissions.has(PermissionFlagsBits.Administrator)) {
+      notes.push(
+        this.note(
+          `@everyone Role should **NOT** have Administrator Permissions!`
+        )
+      );
+    }
+
+    // Hierarchy
+
+    const me = guild.members.me ?? (await guild.members.fetch(client.user.id));
+    const topRole = me.roles.highest;
+
+    if (topRole.position / totalRoles <= 0.7)
+      notes.push(this.note(`My highest role [${topRole}] is too low!`));
+    if (topRole.id === guild.id)
+      notes.push(
+        this.note(
+          'My highest Role is @everyone and it will cause issues with commands, please assign a higher role to me!'
+        )
+      );
+
+    if (!notes.length) return `> Role  \n${GirEmojis.Success} Perfect!`;
+    notes.unshift(`> Role  \n${GirEmojis.Fail} Issues Found!`);
+
+    return notes
+      .join('\n')
+      .concat(
+        `\n\n> *Tip: Role Hierarchy plays an important role in moderation!*`
+      );
+  }
+
   private async guildPermissions(message: GirCommand.Message) {
     await send(message, {
       embeds: [new LoadingEmbed(`Checking Overall Permissions...`)],
@@ -102,9 +175,9 @@ export class debugCommand extends GirCommand {
     );
 
     if (!notes.length)
-      return `> Server Permissions ${GirEmojis.Success} Perfect!`;
+      return `> Server Permissions \n${GirEmojis.Success} Perfect!`;
     notes.unshift(
-      `> Server Permissions ${GirEmojis.Fail} Permissions Missing!`
+      `> Server Permissions \n${GirEmojis.Fail} Permissions Missing!`
     );
 
     return notes.join('\n');
@@ -143,7 +216,7 @@ export class debugCommand extends GirCommand {
         case 2:
           key = 'Moderator';
           break;
-        case 0:
+        case 3:
           key = 'Admin';
           break;
       }
@@ -159,8 +232,8 @@ export class debugCommand extends GirCommand {
       } else notes.push(this.note(`No ${key} Roles setup found`));
     }
 
-    if (!notes.length) return `> Server Setup ${GirEmojis.Success} Perfect!`;
-    notes.unshift(`> Server Setup ${GirEmojis.Fail} Issues found!`);
+    if (!notes.length) return `> Server Setup \n${GirEmojis.Success} Perfect!`;
+    notes.unshift(`> Server Setup \n${GirEmojis.Fail} Issues found!`);
 
     return notes
       .join('\n')
@@ -204,102 +277,15 @@ export class debugCommand extends GirCommand {
     }
 
     if (!notes.length)
-      return `> Per Channel Permissions ${GirEmojis.Success} Perfect!`;
+      return `> Per Channel Permissions \n${GirEmojis.Success} Perfect!`;
     notes.unshift(
-      `> Per Channel Permissions ${GirEmojis.Fail} Permission Overwrites found!`
+      `> Per Channel Permissions \n${GirEmojis.Fail} Permission Overwrites found!`
     );
 
     return notes
       .join('\n')
       .concat(
-        '\n\n> *Tip: Granting `Administrator` Permission can solve all permission related issues, but it is not a necessity for me to function!*'
-      );
-  }
-
-  private async roleCheck(message: GirCommand.Message) {
-    await send(message, {
-      embeds: [new LoadingEmbed(`Checking Roles...`)],
-    });
-
-    const { guild } = message;
-    const notes: string[] = [];
-    const roles = (await guild.roles.fetch()).filter((r) => !r.managed);
-    const { everyone } = guild.roles;
-    const admins = roles.filter((r) =>
-      r.permissions.has(PermissionFlagsBits.Administrator)
-    ).size;
-    const totalRoles = roles.size;
-
-    const counts = this.getRecommendedCounts(guild);
-
-    const size = (max: number, cur: number, min: number) =>
-      Math.min(max - cur, cur - min) === max - cur ? '__High__' : '__Low__';
-
-    if (!this.range(counts.Admins.max, admins, counts.Admins.min))
-      notes.push(
-        this.note(
-          `Too ${size(
-            counts.Admins.max,
-            admins,
-            counts.Admins.min
-          )} [**${admins}**] amount of Roles with Administrator Permissions!`
-        )
-      );
-    if (!this.range(counts.Roles.max, totalRoles, counts.Roles.min))
-      notes.push(
-        this.note(
-          `Too ${size(
-            counts.Roles.max,
-            totalRoles,
-            counts.Roles.min
-          )} [**${totalRoles}**] amount of Roles in Server!`
-        )
-      );
-
-    if (everyone.permissions.has(PermissionFlagsBits.Administrator)) {
-      notes.push(
-        this.note(
-          `@everyone Role should **NOT** have Administrator Permissions!`
-        )
-      );
-    }
-
-    if (!notes.length) return `> Role Check ${GirEmojis.Success} Perfect!`;
-    notes.unshift(`> Role Check ${GirEmojis.Fail} Issues Found!`);
-
-    return notes.join('\n');
-  }
-
-  private async roleHierarchy(message: GirCommand.Message) {
-    await send(message, {
-      embeds: [new LoadingEmbed(`Checking Role Hierarchy...`)],
-    });
-
-    const { guild, client } = message;
-    const notes: string[] = [];
-
-    const totalRoles = guild.roles.cache.size;
-    const me = guild.members.me ?? (await guild.members.fetch(client.user.id));
-    const topRole = me.roles.highest;
-
-    if (topRole.position / totalRoles <= 0.7)
-      notes.push(
-        this.note(`My highest role [${topRole}] is quite low in the hierarchy!`)
-      );
-    if (topRole.id === guild.id)
-      notes.push(
-        this.note(
-          'My highest Role is @everyone and it will cause issues with commands, please assign a higher role to me!'
-        )
-      );
-
-    if (!notes.length) return `> Role Hierarchy ${GirEmojis.Success} Perfect!`;
-    notes.unshift(`> Role Hierarchy ${GirEmojis.Fail} Issues Found!`);
-
-    return notes
-      .join('\n')
-      .concat(
-        `\n\n> *Tip: Role Hierarchy plays an important role in moderating people!*`
+        '\n\n> *Tip: Granting `Administrator` Permission can solve all permission related issues, but it is not a necessity for me to function*'
       );
   }
 

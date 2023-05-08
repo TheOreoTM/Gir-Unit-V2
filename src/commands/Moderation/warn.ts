@@ -1,5 +1,4 @@
-import { GirCommand, SuccessEmbed } from '#lib/structures';
-import { Warn } from '#lib/structures/classes/Warn';
+import { FailEmbed, GirCommand, SuccessEmbed } from '#lib/structures';
 import { PermissionLevels } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
 import { UserError } from '@sapphire/framework';
@@ -15,6 +14,7 @@ export class UserCommand extends GirCommand {
     if (!message.member) return;
     if (!message.guild) return;
     const target = await args.pick('member').catch(() => null);
+    // const target = await args.pick('member').catch(() => null);
 
     if (!target) {
       throw new UserError({
@@ -32,13 +32,14 @@ export class UserCommand extends GirCommand {
       });
     }
 
-    const warn = new Warn(target, message.member, reason);
-    await warn.generateModlog(message.guild);
+    await target
+      .warn({ reason: reason, staff: message.member })
+      .catch(async (err) => {
+        return await message.channel.send({ embeds: [new FailEmbed(err)] });
+      });
 
     return await send(message, {
-      embeds: [
-        new SuccessEmbed(`${target.user.tag} has been warned | ${reason}`),
-      ],
+      embeds: [new SuccessEmbed(`${target} has been warned | ${reason}`)],
     });
   }
 }

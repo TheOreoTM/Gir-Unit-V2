@@ -131,3 +131,4 @@ dist
 
 # Sapphire files
 templates/
+.sapphirerc.json

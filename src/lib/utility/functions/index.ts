@@ -5,13 +5,15 @@ export { clean, initClean } from './clean';
 export { connectToMongo } from './connectToMongo';
 export { countlines } from './countlines';
 export { hours, mins, sec, time } from './duration';
-export { capitalizeWords, format } from './formatter';
-export { generateModLogEmbed } from './generateDescription';
+export { capitalizeWords, format, formatName } from './formatter';
 export { genRandomFloat, genRandomInt } from './genRandom';
+export { generateBar } from './generateBar';
+export { generateModLogEmbed } from './generateDescription';
 export { getAllFiles } from './getFiles';
 export { getSuccessLoggerData, logSuccessCommand } from './logSuccessCommand';
 export { mention } from './mention';
 export {
+  cleanMentions,
   deleteMessage,
   getCommand,
   promptForMessage,
@@ -36,5 +38,5 @@ export {
 export { managable } from './role';
 export { summableArray } from './summableArray';
 export { formatDuration } from './time';
-export { uid } from './uid'; // why?
+export { uid } from './uid';
 export { wait } from './wait';

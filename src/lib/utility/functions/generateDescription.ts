@@ -1,6 +1,6 @@
 import { ModColors } from '#constants';
 import type { FakeUser } from '#lib/structures';
-import type { modAction } from '#lib/types';
+import type { ModAction } from '#lib/types';
 import { EmbedBuilder, GuildMember, User } from 'discord.js';
 import { ms } from 'enhanced-ms';
 
@@ -14,7 +14,7 @@ export function generateModLogEmbed({
 }: {
   member: GuildMember | User | FakeUser;
   staff: GuildMember | User | FakeUser;
-  action: modAction;
+  action: ModAction;
   caseNum: string;
   reason: string;
   length?: number | null;
@@ -33,12 +33,12 @@ export function generateModLogEmbed({
       {
         inline: true,
         name: `User`,
-        value: [`<@${member.id}>`].join('\n'),
+        value: `<@${member.id}>`,
       },
       {
         inline: true,
         name: 'Moderator',
-        value: [`<@${staff.id}>`].join('\n'),
+        value: `<@${staff.id}>`,
       }
     );
 

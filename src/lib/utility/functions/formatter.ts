@@ -1,3 +1,4 @@
+import type { Pet } from '#lib/structures/classes/Pet';
 import type { PermissionsString } from 'discord.js';
 /**
  * It takes a sentence and return a string of every words first letter capitalized
@@ -11,6 +12,34 @@ export function capitalizeWords(sentence: string) {
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+}
+
+/**
+ *
+ * @param {Pet} pet The pet you want to format the name for
+ * @param {string} spec The formatting you want
+ * l -> Level {level}
+ * L -> L{level}
+ * n -> nickname
+ * f -> favourite
+ * @returns The formated name
+ */
+export function formatName(pet: Pet, spec: string) {
+  let name: string = '';
+
+  if (pet.shiny) name = `🌟 `; // shiny emoji
+  if (!pet.shiny) name = ``; // default
+  if (spec.includes('l')) name += `Level ${pet.level} `; // long
+  if (spec.includes('L')) name += `L${pet.level} `; // short
+  // if (spec.includes('e')) name = emoji + ' ' + name // emoji
+
+  name += pet.name;
+
+  if (spec.includes('n') && pet.nickname && pet.nickname.length !== 0)
+    name += ` "${pet.nickname}"`; // nickname
+  if (spec.includes('f') && pet.favourite) name += ` ❤️`; // favourite
+
+  return name;
 }
 
 /**
@@ -69,11 +98,14 @@ const order: Record<PermissionsString, number> = {
   UseEmbeddedActivities: 5,
   Stream: 5,
   AttachFiles: 6,
+  SendVoiceMessages: 6,
   AddReactions: 7,
   CreateInstantInvite: 8,
   UseExternalEmojis: 9,
   UseExternalStickers: 9,
+  UseExternalSounds: 9,
   PrioritySpeaker: 10,
+  UseSoundboard: 10,
   SendMessagesInThreads: 10,
   SendTTSMessages: 10,
   UseVAD: 11,
@@ -88,6 +120,7 @@ const order: Record<PermissionsString, number> = {
   MoveMembers: 20,
   MuteMembers: 20,
   ManageEmojisAndStickers: 21,
+  ManageGuildExpressions: 21,
   ManageEvents: 21,
   ManageMessages: 22,
   ManageWebhooks: 23,
@@ -95,6 +128,7 @@ const order: Record<PermissionsString, number> = {
   ManageRoles: 25,
   ModerateMembers: 26,
   ViewAuditLog: 27,
+  ViewCreatorMonetizationAnalytics: 27,
   KickMembers: 28,
   BanMembers: 29,
   ManageChannels: 30,

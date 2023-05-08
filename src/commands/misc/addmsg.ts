@@ -1,12 +1,13 @@
+import { GirCommand } from '#lib/structures';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import messageSchema from '../../lib/structures/schemas/message-schema';
 
-@ApplyOptions<Command.Options>({
+@ApplyOptions<GirCommand.Options>({
   description: 'A basic command',
+  hidden: true,
 })
-export class UserCommand extends Command {
+export class UserCommand extends GirCommand {
   public async messageRun(message: Message) {
     await messageSchema.create({
       _id: message.id,

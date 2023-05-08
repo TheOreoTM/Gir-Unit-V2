@@ -35,7 +35,6 @@ export const config: Config = {
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildModeration,
-    GatewayIntentBits.DirectMessages,
     GatewayIntentBits.GuildMembers,
   ],
   cooldown_options: {

@@ -5,7 +5,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 
 // import { Cron } from 'croner';
 @ApplyOptions<TaskOptions>({
-  pattern: '*/3 * * * * *',
+  pattern: '*/2 * * * * *',
 })
 export class ExpiredMuteTask extends Task {
   public async run(): Promise<void> {
@@ -72,9 +72,6 @@ export class ExpiredMuteTask extends Task {
 
         const modlog = new Modlog(data);
         await modlog.create();
-        console.log(
-          `Unmuted ${userId} in ${guildId} with reason: Mute expired`
-        );
         continue;
       }
     }

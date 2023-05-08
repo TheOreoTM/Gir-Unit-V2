@@ -19,6 +19,7 @@ export class UserCommand extends GirCommand {
       .addPageEmbed(new FailEmbed('test2'))
       .addPageEmbed(new DefaultEmbed('test3'))
       .addPageEmbed(new LoadingEmbed('test4'));
+    console.log(embed);
     await embed.run(message);
   }
 }

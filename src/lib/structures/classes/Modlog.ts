@@ -2,7 +2,7 @@ import {
   BaseModActionData,
   GirEvents,
   ModlogData,
-  type modAction,
+  type ModAction,
 } from '#lib/types';
 import { nextCase } from '#lib/utility';
 import { container } from '@sapphire/framework';
@@ -13,7 +13,7 @@ export class Modlog {
   guild: Guild;
   member: GuildMember;
   staff: GuildMember;
-  action: modAction;
+  action: ModAction;
   reason: string | null;
   length?: number | null;
   caseNum: string = '';

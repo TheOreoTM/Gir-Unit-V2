@@ -1,20 +1,27 @@
 // import type { GuildSettings } from '#lib/structures';
 // import type { GuildMessage } from '#lib/types';
-import type { GuildSettings } from '#lib/structures';
-import { PermissionLevels, type GuildMessage } from '#lib/types';
+import { GuildSettings, Mute, Warn } from '#lib/structures';
+import {
+  MuteOptions,
+  PermissionLevels,
+  WarnOptions,
+  type GuildMessage,
+} from '#lib/types';
 import {
   ApplicationCommandRegistry,
-  Args as SapphireArgs,
   Command,
   CommandOptionsRunTypeEnum,
   PreconditionContainerArray,
+  Args as SapphireArgs,
   UserError,
   type MessageCommandContext,
 } from '@sapphire/framework';
 import {
   AutocompleteInteraction,
-  ChatInputCommandInteraction as ChatInputInteraction,
   ContextMenuCommandInteraction as CTXMenuCommandInteraction,
+  ChatInputCommandInteraction as ChatInputInteraction,
+  GuildMember,
+  Message,
   MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
   PermissionFlagsBits,
   PermissionsBitField,
@@ -58,6 +65,10 @@ export abstract class GirCommand extends Command {
       (this.permissionLevel =
         options.permissionLevel ?? PermissionLevels.Everyone),
       (this.community = options.community ?? false);
+  }
+
+  public async prefix(message: Message) {
+    return await this.container.client.fetchPrefix(message);
   }
 
   protected error(identifier: string | UserError, context?: unknown): never {
@@ -164,10 +175,46 @@ declare module '@sapphire/framework' {
     ServerOwner: never;
     Community: never;
   }
+  export interface DetailedDescriptionCommand {
+    usage: string;
+    examples: string[];
+    extendedHelp?: boolean;
+  }
+  interface ArgType {
+    commandCategory: string;
+    duration: number;
+  }
 }
+
 declare module 'discord.js' {
   interface Guild {
     settings: GuildSettings | null;
     logging: Logging | null;
   }
+  interface GuildMember {
+    warn(options: WarnOptions): Promise<GuildMember>;
+    mute(duration: number | null, options: MuteOptions): Promise<GuildMember>;
+  }
 }
+
+GuildMember.prototype.warn = async function (
+  options: WarnOptions
+): Promise<GuildMember> {
+  const warn = new Warn(this, options.staff, options.reason);
+  await warn.generateModlog(this.guild);
+  return this;
+};
+
+GuildMember.prototype.mute = async function (
+  duration: number | null,
+  options: MuteOptions
+): Promise<GuildMember> {
+  const mute = new Mute({
+    target: this,
+    staff: options.staff,
+    reason: options.reason,
+    duration: duration,
+  });
+  await mute.create();
+  return this;
+};

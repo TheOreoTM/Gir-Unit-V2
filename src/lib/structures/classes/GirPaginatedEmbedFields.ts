@@ -8,22 +8,12 @@ import {
   ButtonStyle,
   ComponentType,
   MessageComponentInteraction,
-  type APIStringSelectComponent,
 } from 'discord.js';
 
 export class GirPaginatedMessageEmbedFields extends PaginatedMessageEmbedFields {
   public constructor(options: PaginatedMessageOptions = {}) {
     super(options);
     this.setActions([
-      {
-        customId: '@sapphire/paginated-messages.goToPage',
-        type: ComponentType.StringSelect,
-        run: ({ handler, interaction }) => {
-          if (!interaction.isStringSelectMenu()) return;
-          handler.index = parseInt(interaction.values[0], 10);
-          this.updateComponents(handler, interaction);
-        },
-      },
       {
         customId: '@sapphire/paginated-messages.firstPage',
         style: ButtonStyle.Secondary,
@@ -87,12 +77,6 @@ export class GirPaginatedMessageEmbedFields extends PaginatedMessageEmbedFields 
     interaction: MessageComponentInteraction
   ) {
     const page = handler.messages[handler.index]!;
-    const { options } = interaction.message.components![1]
-      .components[0] as unknown as APIStringSelectComponent;
-    for (const option of options) {
-      if (option.value === `${handler.index}`) option.default = true;
-      else option.default = false;
-    }
     // @ts-expect-error lol
     page.components = interaction.message.components;
   }

@@ -9,7 +9,7 @@
   "dependencies": {
     "@sapphire/decorators": "^6.0.0",
     "@sapphire/discord-utilities": "^3.0.1",
-    "@sapphire/discord.js-utilities": "^6.0.4",
+    "@sapphire/discord.js-utilities": "^6.0.7",
     "@sapphire/duration": "^1.1.0",
     "@sapphire/framework": "^4.4.1",
     "@sapphire/plugin-editable-commands": "^3.0.1",
@@ -31,7 +31,7 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register src/index.ts",
+    "start": "npm i && ts-node -r tsconfig-paths/register src/index.ts",
     "dev": "nodemon -r tsconfig-paths/register src/index.ts"
   },
   "devDependencies": {

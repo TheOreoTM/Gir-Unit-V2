@@ -1,4 +1,4 @@
-import { ModlogData, PunishmentType } from '#lib/types';
+import { ModActions, ModlogData, PunishmentType } from '#lib/types';
 import { UserError } from '@sapphire/framework';
 import type { Guild, GuildMember } from 'discord.js';
 import punishmentSchema from '../schemas/punishment-schema';
@@ -11,7 +11,7 @@ export class Mute {
   memberTag: string;
   staffId: string;
   staffTag: string;
-  reason: string;
+  reason: string | undefined;
   duration: number | null;
   caseNum: string = '';
   public constructor({
@@ -22,7 +22,7 @@ export class Mute {
   }: {
     target: GuildMember;
     staff: GuildMember;
-    reason: string;
+    reason: string | undefined;
     duration?: number | null;
   }) {
     this.guildId = staff.guild.id;
@@ -92,8 +92,8 @@ export class Mute {
       guild: this.guild,
       member: member,
       staff: staff,
-      action: 'mute',
-      reason: this.reason,
+      action: ModActions.Mute,
+      reason: this.reason ? this.reason : 'No reason',
       length: this.duration,
     };
     const caseData = new Modlog(data);

@@ -3,6 +3,8 @@ export * from './message-schema';
 export * from './moderationSettings-schema';
 export * from './modlogs-schema';
 export * from './modnick-schema';
+export * from './pet-schema';
+export * from './petUser-schema';
 export * from './prefix-schema';
 export * from './punishment-schema';
 export * from './staffRoles-schema';

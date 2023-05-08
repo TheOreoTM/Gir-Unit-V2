@@ -1,7 +1,9 @@
 import type { BasePetStat, PetStatType } from '#lib/types';
-import { petData } from '#lib/utility/pet';
+import { capitalizeWords } from '#lib/utility';
+import { PetData } from '#lib/utility/pet';
 import { container } from '@sapphire/framework';
-import type { User } from 'discord.js';
+import type { GuildMember } from 'discord.js';
+import type { Types } from 'mongoose';
 import petSchema from '../schemas/pet-schema';
 import petUserSchema from '../schemas/petUser-schema';
 
@@ -10,8 +12,9 @@ const generateIv = () => {
 };
 
 const calculateStat = (pet: Pet, stat: PetStatType): number => {
-  let find: BasePetStat | undefined = petData.find((p) => p.id === pet.petId);
+  let find: BasePetStat | undefined = PetData.get(pet.petId);
   if (!find) {
+    console.log(pet.petId);
     return 0;
   }
   const base = find.baseStats[stat];
@@ -36,13 +39,14 @@ const calculateStat = (pet: Pet, stat: PetStatType): number => {
 };
 
 interface IPetData {
-  owner: User;
+  owner: GuildMember;
   petId: string;
   shiny: boolean;
   name: string;
 }
 
 export class Pet {
+  _id?: Types.ObjectId;
   petId: string;
   ownerId: string;
   name: string;
@@ -59,19 +63,19 @@ export class Pet {
   ivAtk: number = generateIv();
   ivDef: number = generateIv();
   ivSpd: number = generateIv();
-  hpStat = calculateStat(this, 'hp');
-  defStat = calculateStat(this, 'def');
-  atkStat = calculateStat(this, 'atk');
-  spdStat = calculateStat(this, 'spd');
+  hpStat: number;
+  defStat: number;
+  atkStat: number;
+  spdStat: number;
   moves: Array<any> = [];
-  mega: object = {};
+  mega?: { id: string; requirement: string };
   idx: number = -1;
   constructor(data: IPetData, level?: number, xp?: number) {
     this.ownerId = data.owner.id;
     this.petId = data.petId;
     this.level = level ? level : 1;
     this.shiny = data.shiny ? data.shiny : false;
-    this.name = data.name ? data.name : 'None';
+    this.name = data.name ? capitalizeWords(data.name) : 'None';
 
     const reqXp = (this.level + 1) * 25 + 250;
     const stage = Math.ceil(this.level / 20);
@@ -80,19 +84,20 @@ export class Pet {
     this.reqXp = reqXp;
     this.stage = stage;
 
+    this.hpStat = calculateStat(this, 'hp');
+    this.atkStat = calculateStat(this, 'atk');
+    this.defStat = calculateStat(this, 'def');
+    this.spdStat = calculateStat(this, 'spd');
+
     this.nickname = '';
     this.favourite = false;
 
     this.ivTotal = this.ivHp + this.ivAtk + this.ivDef + this.ivSpd;
     this.ivAverage = parseFloat(((this.ivTotal / 124) * 100).toFixed(2));
 
-    const mega = petData.find((pet) => pet.id === this.petId)!.mega ?? false;
-
-    if (mega) {
-      const megaTo = petData.find((pet) => pet.id === mega.id);
-      this.mega = megaTo ?? {};
-    } else {
-      this.mega = {};
+    const petData = PetData.get(this.petId);
+    if (petData?.hasMega) {
+      this.mega = petData.mega;
     }
   }
 
@@ -107,6 +112,13 @@ export class Pet {
 
   public async create() {
     const data = await this.generateIdx();
-    await petSchema.create(data);
+    const pet = await petSchema.create(data);
+    this._id = pet._id;
+    await petUserSchema.findOneAndUpdate(
+      { userId: this.ownerId },
+      { selectedId: this._id },
+      { upsert: true }
+    );
+    return pet;
   }
 }

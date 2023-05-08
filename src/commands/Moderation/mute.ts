@@ -1,4 +1,4 @@
-import { FailEmbed, GirCommand, Mute, SuccessEmbed } from '#lib/structures';
+import { FailEmbed, GirCommand, SuccessEmbed } from '#lib/structures';
 import { PermissionLevels } from '#lib/types';
 import { checkModeratable } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -34,22 +34,11 @@ export class muteCommand extends GirCommand {
       });
     }
 
-    // if (!muteRole) {
-    //   return await send(message, {
-    //     embeds: [
-    //       new FailEmbed(`I couldn't find a \`Muted\` role in the server`),
-    //     ],
-    //   });
-    // }
-
-    // await target.roles.add([muteRole]).catch(async () => {
-    //   return await send(message, {
-    //     embeds: [new FailEmbed('Something went wrong')],
-    //   });
-    // });
-
-    const mute = new Mute({ reason, staff: message.member, target, duration });
-    await mute.create();
+    await target
+      .mute(duration, { staff: message.member, reason: reason })
+      .catch(async (err) => {
+        return await message.channel.send({ embeds: [new FailEmbed(err)] });
+      });
 
     return await send(message, {
       embeds: [
