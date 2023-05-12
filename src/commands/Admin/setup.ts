@@ -12,6 +12,7 @@ import {
 @ApplyOptions<GirCommand.Options>({
   description: 'Easy and interactive setup for Gir-Unit',
   name: 'setup',
+  requiredClientPermissions: ['ManageWebhooks'],
   detailedDescription: {
     usage: '/setup',
     examples: ['/setup'],
@@ -67,7 +68,7 @@ export class setupCommand extends GirCommand {
           .setDescription(this.description)
           .setDMPermission(false)
           .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-      { idHints: ['919568881939517460', '600707283097485322'] }
+      { idHints: ['1096169897463140493'] }
     );
   }
 }

@@ -35,7 +35,8 @@ export class UserCommand extends GirCommand {
     await target
       .warn({ reason: reason, staff: message.member })
       .catch(async (err) => {
-        return await message.channel.send({ embeds: [new FailEmbed(err)] });
+        await message.channel.send({ embeds: [new FailEmbed(err)] });
+        return;
       });
 
     return await send(message, {

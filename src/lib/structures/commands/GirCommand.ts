@@ -2,11 +2,13 @@
 // import type { GuildMessage } from '#lib/types';
 import { GuildSettings, Mute, Warn } from '#lib/structures';
 import {
+  AutomodRule,
   MuteOptions,
   PermissionLevels,
   WarnOptions,
   type GuildMessage,
 } from '#lib/types';
+import { sec } from '#lib/utility';
 import {
   ApplicationCommandRegistry,
   Command,
@@ -28,6 +30,7 @@ import {
   UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction,
 } from 'discord.js';
 import type { Logging } from '../classes/Logging';
+import heatSchema from '../schemas/heat-schema';
 export abstract class GirCommand extends Command {
   /**
    * Whether the command can be disabled.
@@ -194,8 +197,44 @@ declare module 'discord.js' {
   interface GuildMember {
     warn(options: WarnOptions): Promise<GuildMember>;
     mute(duration: number | null, options: MuteOptions): Promise<GuildMember>;
+    addHeat(
+      rule: AutomodRule,
+      expiresAfterSeconds: number
+    ): Promise<GuildMember>;
+    getHeat(rule?: AutomodRule): Promise<number>;
   }
 }
+
+GuildMember.prototype.getHeat = async function (rule?: AutomodRule) {
+  let violations: number = 0;
+  if (rule) {
+    violations = await heatSchema.countDocuments({
+      memberId: this.id,
+      guildId: this.guild.id,
+      rule: rule,
+    });
+  } else {
+    violations = await heatSchema.countDocuments({
+      memberId: this.id,
+      guildId: this.guild.id,
+    });
+  }
+
+  return violations;
+};
+
+GuildMember.prototype.addHeat = async function (
+  rule: AutomodRule,
+  expiresAfterSeconds: number
+) {
+  await heatSchema.create({
+    memberId: this.id,
+    guildId: this.guild.id,
+    rule: rule,
+    expiresAt: new Date(Date.now() + sec(expiresAfterSeconds)),
+  });
+  return this;
+};
 
 GuildMember.prototype.warn = async function (
   options: WarnOptions

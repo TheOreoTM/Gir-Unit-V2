@@ -10,9 +10,9 @@ export class Warn {
   _id: string = uid(); // Warn Id
   guildId: string;
   userId: string;
-  userTag: string;
+  userName: string;
   staffId: string;
-  staffTag: string;
+  staffName: string;
   reason: string;
   caseNum: string;
 
@@ -21,9 +21,9 @@ export class Warn {
     const guildId = member.guild.id || member.id;
     this.guildId = guildId;
     this.userId = member.id;
-    this.userTag = member.user.tag;
+    this.userName = member.user.username;
     this.staffId = mod.id;
-    this.staffTag = mod.user.tag;
+    this.staffName = mod.user.username;
     this.reason = reason ? reason : 'No reason';
     this.caseNum = '';
   }
@@ -46,9 +46,9 @@ export class Warn {
       _id: this._id,
       guildId: this.guildId,
       userId: this.userId,
-      userTag: this.userTag,
+      userName: this.userName,
       staffId: this.staffId,
-      staffTag: this.staffTag,
+      staffName: this.staffName,
       reason: this.reason,
       caseNum: this.caseNum,
     });

@@ -1,4 +1,4 @@
-import type { Guild, TextChannel } from 'discord.js';
+import { Guild, WebhookClient } from 'discord.js';
 import loggingSchema from '../schemas/logging-schema';
 
 export class Logging {
@@ -6,72 +6,66 @@ export class Logging {
     this.guild = guild;
   }
 
-  public get message(): Promise<TextChannel | null> {
+  public get message(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      return (
-        (this.guild.channels.cache.get(data.message) as TextChannel) ?? null
-      );
+      const webhook = new WebhookClient({ url: data.message.url });
+      return webhook;
     })();
   }
 
-  public get server(): Promise<TextChannel | null> {
+  public get server(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      return (
-        (this.guild.channels.cache.get(data.server) as TextChannel) ?? null
-      );
+      const webhook = new WebhookClient({ url: data.server.url });
+      return webhook;
     })();
   }
 
-  public get member(): Promise<TextChannel | null> {
+  public get member(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      return (
-        (this.guild.channels.cache.get(data.member) as TextChannel) ?? null
-      );
+      const webhook = new WebhookClient({ url: data.member.url });
+      return webhook;
     })();
   }
 
-  public get channel(): Promise<TextChannel | null> {
+  public get channel(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      return (
-        (this.guild.channels.cache.get(data.channel) as TextChannel) ?? null
-      );
+      const webhook = new WebhookClient({ url: data.channel.url });
+      return webhook;
     })();
   }
 
-  public get role(): Promise<TextChannel | null> {
+  public get role(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      return (this.guild.channels.cache.get(data.role) as TextChannel) ?? null;
+      const webhook = new WebhookClient({ url: data.role.url });
+      return webhook;
     })();
   }
 
-  public get moderation(): Promise<TextChannel | null> {
+  public get moderation(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      const channel = this.guild.channels.cache.get(
-        data.moderation
-      ) as TextChannel;
-      return channel;
+      const webhook = new WebhookClient({ url: data.moderation.url });
+      return webhook;
     })();
   }
 
-  public get transcript(): Promise<TextChannel | null> {
+  public get transcript(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
-      return (
-        (this.guild.channels.cache.get(data.transcripts) as TextChannel) ?? null
-      );
+      const webhook = new WebhookClient({ url: data.transcripts.url });
+      return webhook;
     })();
   }
 }

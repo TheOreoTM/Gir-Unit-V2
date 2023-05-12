@@ -39,25 +39,29 @@ export class Modlog {
     const modlog = await modlogsSchema.create({
       guildId: this.guild!.id,
       userId: this.member.id,
-      userTag: this.member.user.tag,
+      userName: this.member.user.username,
       staffId: this.staff.id,
-      staffTag: this.staff.user.tag,
+      staffName: this.staff.user.username,
       reason: this.reason,
       length: this.length ? this.length : null,
       action: this.action,
       caseNum: this.caseNum,
+      messageId: '',
+      messageUrl: '',
     });
 
     const data = {
       staffId: this.staff.id,
-      staffTag: this.staff.user.tag,
+      staffName: this.staff.user.username,
       userId: this.member.id,
-      userTag: this.member.user.tag,
+      userName: this.member.user.username,
       action: this.action,
       caseNum: this.caseNum,
       reason: this.reason,
       guildId: this.guild.id,
       length: this.length,
+      messageId: '',
+      messageUrl: '',
     } as BaseModActionData;
 
     container.client.emit(GirEvents.ModAction, data);

@@ -3,14 +3,18 @@ import type { Guild, GuildMember } from 'discord.js';
 export interface BaseModActionData {
   guildId: string;
   userId: string;
-  userTag: string;
+  userName: string;
   staffId: string;
-  staffTag: string;
+  staffName: string;
   action: ModAction;
   caseNum: string;
   reason: string;
   length?: number;
+  messageId?: string;
+  messageUrl?: string;
 }
+
+export const GirPunishments = ['ban', 'mute', 'kick', 'warn'];
 
 export enum ModActions {
   Kick = 'kick',

@@ -3,6 +3,7 @@ export * from './Confirmation';
 export * from './Embed';
 export * from './Embeds';
 export * from './FakeUser';
+export * from './FuzzySearch';
 export * from './GirPaginatedEmbedFields';
 export * from './GirPaginatedMessage';
 export * from './GuildSettings';

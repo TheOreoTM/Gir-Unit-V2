@@ -1,5 +1,6 @@
 import type { GirClient } from '#lib/GirClient';
-import { GuildSettings, Utils } from '#lib/structures';
+import { GuildSettings, Modnick, Utils } from '#lib/structures';
+import { Automod } from '#lib/structures/classes/Automod';
 import { Logging } from '#lib/structures/classes/Logging';
 import { GirEvents } from '#lib/types';
 import { ExpiredMuteTask } from '#root/features';
@@ -35,6 +36,8 @@ export class UserListener extends Listener {
     for (const guild of guilds.values()) {
       guild.settings = new GuildSettings(guild);
       guild.logging = new Logging(guild);
+      guild.automod = new Automod(guild);
+      guild.modnicks = new Modnick(guild);
     }
 
     // Enabled features

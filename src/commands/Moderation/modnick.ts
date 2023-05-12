@@ -9,6 +9,7 @@ import { send } from '@sapphire/plugin-editable-commands';
   name: 'modnick',
   permissionLevel: PermissionLevels.Trainee,
   flags: ['freeze', 'f', 'frozen'],
+  requiredClientPermissions: ['ManageNicknames'],
 })
 export class UserCommand extends GirCommand {
   public async messageRun(message: GirCommand.Message, args: GirCommand.Args) {

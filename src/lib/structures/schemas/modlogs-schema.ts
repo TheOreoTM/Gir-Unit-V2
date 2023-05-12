@@ -9,9 +9,12 @@ const modlogsSchema = new Schema(
   {
     guildId: reqString,
     userId: reqString,
-    userTag: reqString,
+    userName: reqString,
 
-    staffTag: reqString,
+    messageId: { type: String, required: false, default: '0' },
+    messageUrl: { type: String, required: false, default: '0' },
+
+    staffName: reqString,
     staffId: reqString,
     action: reqString,
     reason: reqString,

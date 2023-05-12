@@ -8,6 +8,7 @@ import { send } from '@sapphire/plugin-editable-commands';
   description: 'A basic command',
   name: 'mute',
   permissionLevel: PermissionLevels.Staff,
+  requiredClientPermissions: ['ManageRoles'],
 })
 export class muteCommand extends GirCommand {
   public override async messageRun(

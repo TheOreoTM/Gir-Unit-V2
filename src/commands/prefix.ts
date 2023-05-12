@@ -6,11 +6,13 @@ import {
   SuccessEmbed,
 } from '#lib/structures';
 import prefixSchema from '#lib/structures/schemas/prefix-schema';
+import { PermissionLevels } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<GirCommand.Options>({
   description: 'Change the prefix for the server',
+  permissionLevel: PermissionLevels.Administrator,
   quotes: [
     ["'", "'"], // Single qoutes
     ['"', '"'], // Double quotes

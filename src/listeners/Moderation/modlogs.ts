@@ -1,4 +1,5 @@
 import type { FakeUser } from '#lib/structures';
+import modlogsSchema from '#lib/structures/schemas/modlogs-schema';
 import {
   GirEvents,
   PunishmentActionData,
@@ -34,6 +35,12 @@ export class UserListener extends Listener {
       length: data.length ? data.length : null,
     });
 
-    channel.send({ embeds: [embed] });
+    const msg = await channel.send({ embeds: [embed] });
+    const msg_url = `https://discord.com/channels/${guild.id}/${channel.id}/${msg.id}`;
+    await modlogsSchema.findOneAndUpdate(
+      { guildId: guild.id, caseNum: data.caseNum },
+      { messageId: msg.id, messageUrl: msg_url },
+      { upsert: true }
+    );
   }
 }

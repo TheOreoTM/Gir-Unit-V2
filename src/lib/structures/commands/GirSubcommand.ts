@@ -1,25 +1,26 @@
 // import type { GuildSettings } from '#lib/structures';
 // import type { GuildMessage } from '#lib/types';
-import type { GuildSettings } from '#lib/structures';
+import type { GuildSettings, Modnick } from '#lib/structures';
 import { PermissionLevels, type GuildMessage } from '#lib/types';
 import {
   ApplicationCommandRegistry,
-  Args as SapphireArgs,
   CommandOptionsRunTypeEnum,
   PreconditionContainerArray,
+  Args as SapphireArgs,
   UserError,
   type MessageCommandContext,
 } from '@sapphire/framework';
 import { Subcommand } from '@sapphire/plugin-subcommands';
 import {
   AutocompleteInteraction,
-  ChatInputCommandInteraction as ChatInputInteraction,
   ContextMenuCommandInteraction as CTXMenuCommandInteraction,
+  ChatInputCommandInteraction as ChatInputInteraction,
   MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
   PermissionFlagsBits,
   PermissionsBitField,
   UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction,
 } from 'discord.js';
+import type { Automod } from '../classes/Automod';
 import type { Logging } from '../classes/Logging';
 export abstract class GirSubcommand extends Subcommand {
   /**
@@ -174,5 +175,7 @@ declare module 'discord.js' {
   interface Guild {
     settings: GuildSettings | null;
     logging: Logging | null;
+    automod: Automod | null;
+    modnicks: Modnick | null;
   }
 }

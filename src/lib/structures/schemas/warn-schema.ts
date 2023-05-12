@@ -10,9 +10,9 @@ const warnSchema = new Schema(
     _id: reqString, // Warn Id
     guildId: reqString,
     userId: reqString,
-    userTag: reqString,
+    userName: reqString,
     staffId: reqString,
-    staffTag: reqString,
+    staffName: reqString,
     reason: reqString,
     caseNum: reqString,
   },

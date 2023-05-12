@@ -23,12 +23,16 @@ export const CooldownFiltered = [...Owners];
 
 export const Prefix = '>';
 
+export const GirUsername = 'Gir-Unit';
+export const GirAvatar =
+  'https://cdn.discordapp.com/attachments/1095696384348410007/1105191621525508146/gir-unit-avatar.png';
+
 export const enum GirEmojis {
   Fail = '<:fail:1093480740571852810>',
   Success = '<:success:1093480744040534046>',
   Prompt = '<:edit:1057359923421380608>',
   Loading = '<a:loading:1096158078900129943>',
-  Info = '<:info:1096158656942330006>>',
+  Info = '<:info:1096158656942330006>',
   Coin = '🪙',
   Left = '◀️',
   Right = '▶️',
