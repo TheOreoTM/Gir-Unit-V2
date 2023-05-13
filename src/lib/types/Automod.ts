@@ -8,6 +8,10 @@ export type BaseAutomodData = {
   action: string;
   bannedWords: string[];
   allowedLinks: string[];
+  punishmentDuration: number;
+  log: boolean;
+  delete: boolean;
+  alert: boolean;
 };
 
 export type BannedWordData = BaseAutomodData & {
@@ -23,6 +27,15 @@ export type AutomodData = BaseAutomodData | BannedWordData | LinkData;
 export enum AutomodRules {
   BannedWords = 'bannedWords',
   Links = 'links',
+}
+
+export type AutomoAction = 'warn' | 'kick' | 'mute' | 'ban';
+
+export enum AutomodActions {
+  Warn = 'warn',
+  Kick = 'kick',
+  Mute = 'mute',
+  Ban = 'ban',
 }
 
 export type AutomodRule = 'bannedWords' | 'links';

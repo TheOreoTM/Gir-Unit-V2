@@ -6,10 +6,21 @@ export class Logging {
     this.guild = guild;
   }
 
+  public get automod(): Promise<WebhookClient | null> {
+    return (async () => {
+      const data = await loggingSchema.findOne({ _id: this.guild.id });
+      if (!data) return null;
+      if (!data.automod) return null;
+      const webhook = new WebhookClient({ url: data.automod.url });
+      return webhook;
+    })();
+  }
+
   public get message(): Promise<WebhookClient | null> {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.message) return null;
       const webhook = new WebhookClient({ url: data.message.url });
       return webhook;
     })();
@@ -19,6 +30,7 @@ export class Logging {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.server) return null;
       const webhook = new WebhookClient({ url: data.server.url });
       return webhook;
     })();
@@ -28,6 +40,7 @@ export class Logging {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.member) return null;
       const webhook = new WebhookClient({ url: data.member.url });
       return webhook;
     })();
@@ -37,6 +50,7 @@ export class Logging {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.channel) return null;
       const webhook = new WebhookClient({ url: data.channel.url });
       return webhook;
     })();
@@ -46,6 +60,7 @@ export class Logging {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.role) return null;
       const webhook = new WebhookClient({ url: data.role.url });
       return webhook;
     })();
@@ -55,6 +70,7 @@ export class Logging {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.moderation) return null;
       const webhook = new WebhookClient({ url: data.moderation.url });
       return webhook;
     })();
@@ -64,6 +80,7 @@ export class Logging {
     return (async () => {
       const data = await loggingSchema.findOne({ _id: this.guild.id });
       if (!data) return null;
+      if (!data.transcripts) return null;
       const webhook = new WebhookClient({ url: data.transcripts.url });
       return webhook;
     })();

@@ -14,8 +14,6 @@ export interface BaseModActionData {
   messageUrl?: string;
 }
 
-export const GirPunishments = ['ban', 'mute', 'kick', 'warn'];
-
 export enum ModActions {
   Kick = 'kick',
   Ban = 'ban',

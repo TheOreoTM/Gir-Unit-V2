@@ -202,6 +202,7 @@ declare module 'discord.js' {
       expiresAfterSeconds: number
     ): Promise<GuildMember>;
     getHeat(rule?: AutomodRule): Promise<number>;
+    deleteHeat(rule: AutomodRule): Promise<GuildMember>;
   }
 }
 
@@ -221,6 +222,16 @@ GuildMember.prototype.getHeat = async function (rule?: AutomodRule) {
   }
 
   return violations;
+};
+
+GuildMember.prototype.deleteHeat = async function (rule: AutomodRule) {
+  await heatSchema.deleteMany({
+    memberId: this.id,
+    guildId: this.guild.id,
+    rule: rule,
+  });
+
+  return this;
 };
 
 GuildMember.prototype.addHeat = async function (

@@ -10,6 +10,5 @@ export class UserEvent extends Listener {
   public override run(message: Message) {
     if (message.guild)
       this.container.client.emit(GirEvents.GuildUserMessage, message);
-    console.log('bruh');
   }
 }

@@ -4,7 +4,7 @@ export { checkModeratable } from './checkModeratable';
 export { clean, initClean } from './clean';
 export { connectToMongo } from './connectToMongo';
 export { countlines } from './countlines';
-export { hours, mins, sec, time } from './duration';
+export { days, hours, mins, months, sec, time, years } from './duration';
 export { capitalizeWords, format, formatName } from './formatter';
 export { genRandomFloat, genRandomInt } from './genRandom';
 export { generateBar } from './generateBar';

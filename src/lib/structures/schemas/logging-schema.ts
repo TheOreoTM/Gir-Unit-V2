@@ -24,6 +24,7 @@ const loggingSchema = new Schema({
   transcripts: reqObject,
   channel: reqObject,
   role: reqObject,
+  automod: reqObject,
 
   ignoredChannels: { type: Array, required: true, default: [] },
 });

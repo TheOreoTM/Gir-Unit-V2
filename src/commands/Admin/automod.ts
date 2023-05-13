@@ -1,7 +1,7 @@
 import { GirCommand } from '#lib/structures';
 import automodSchema from '#lib/structures/schemas/automod-schema,';
 import { ModActions } from '#lib/types';
-import { capitalizeWords } from '#lib/utility';
+import { capitalizeWords, days, hours, mins } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ms } from 'enhanced-ms';
 
@@ -18,15 +18,18 @@ export class automodCommand extends GirCommand {
     interaction: GirCommand.ChatInputCommandInteraction
   ) {
     const subCommand = interaction.options.getSubcommand();
+
+    const threshold = interaction.options.getNumber('threshold');
+    const duration = interaction.options.getNumber('duration');
+    const violations = interaction.options.getNumber('violations');
+    const add = interaction.options.getString('add');
+    const remove = interaction.options.getString('remove');
+    const action = interaction.options.getString('action');
+
+    if (interaction.options.getString('action') === ModActions.Mute) {
+    }
     switch (subCommand) {
       case 'bannedwords':
-        const threshold = interaction.options.getNumber('threshold');
-        const duration = interaction.options.getNumber('duration');
-        const violations = interaction.options.getNumber('violations');
-        const add = interaction.options.getString('add');
-        const remove = interaction.options.getString('remove');
-        const action = interaction.options.getString('action');
-
         await automodSchema.findOneAndUpdate(
           {
             _id: interaction.guildId,
@@ -51,6 +54,7 @@ export class automodCommand extends GirCommand {
         const data = await automodSchema.findOne({
           _id: interaction.guildId,
         });
+
         let automodData = data;
         if (!automodData) {
           automodData = await automodSchema.create({
@@ -169,6 +173,38 @@ export class automodCommand extends GirCommand {
                     { name: 'Kick', value: ModActions.Kick },
                     { name: 'Warn', value: ModActions.Warn }
                   )
+              )
+              .addStringOption((option) =>
+                option
+                  .setName('punishment_duration')
+                  .setDescription(
+                    'How long the bot should punish for (if the action is mute/ban)'
+                  )
+                  .setChoices(
+                    { name: 'Permanent', value: `0` },
+                    { name: '1 minute', value: `${mins(1)}` },
+                    { name: '5 minutes', value: `${mins(5)}` },
+                    { name: '10 minutes', value: `${mins(10)}` },
+                    { name: '20 minutes', value: `${mins(20)}` },
+                    { name: '30 minutes', value: `${mins(30)}` },
+                    { name: '1 hour', value: `${hours(1)}` },
+                    { name: '2 hours', value: `${hours(2)}` },
+                    { name: '4 hours', value: `${hours(4)}` },
+                    { name: '8 hours', value: `${hours(8)}` },
+                    { name: '12 hours', value: `${hours(12)}` },
+                    { name: '1 day', value: `${days(1)}` }
+                  )
+              )
+              .addBooleanOption((option) =>
+                option.setDescription('Delete the message?').setName('delete')
+              )
+              .addBooleanOption((option) =>
+                option.setDescription('Alert the user?').setName('alert')
+              )
+              .addBooleanOption((option) =>
+                option
+                  .setDescription('Send a log to the logging channel?')
+                  .setName('log')
               )
           ),
 

@@ -5,4 +5,5 @@ export const GirEvents = {
   ModAction: 'modAction',
   UserMessage: 'userMessage',
   GuildUserMessage: 'guildUserMessage',
+  GuildMessageLog: 'guildMessageLog',
 };

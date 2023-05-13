@@ -13,6 +13,10 @@ const baseData = {
   duration: { type: Number, required: true, default: 300 },
   threshold: { type: Number, required: true, default: 100 },
   action: { type: String, required: true, default: 'warn' },
+  punishmentDuration: { type: Number, required: true, default: 0 },
+  alert: { type: Boolean, required: false },
+  log: { type: Boolean, required: false },
+  delete: { type: Boolean, required: false },
 };
 
 const bannedWordData = {

@@ -79,7 +79,7 @@ export async function sendTemporaryMessage(
 
   const response = (await send(message, options)) as Message;
   // floatPromise(deleteMessage(response, timer)); // No need for this because when message gets deleted so does the command reponse
-  floatPromise(deleteMessage(message, timer));
+  floatPromise(deleteMessage(response, timer));
   return response;
 }
 
