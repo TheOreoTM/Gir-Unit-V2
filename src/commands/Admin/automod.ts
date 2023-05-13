@@ -1,9 +1,9 @@
 import { GirCommand } from '#lib/structures';
 import automodSchema from '#lib/structures/schemas/automod-schema,';
 import { ModActions } from '#lib/types';
-import { capitalizeWords, days, hours, mins } from '#lib/utility';
+import { days, hours, mins } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
-import { ms } from 'enhanced-ms';
+// import { ms } from 'enhanced-ms';
 
 @ApplyOptions<GirCommand.Options>({
   description: 'Update the automod settings of the server',
@@ -19,90 +19,26 @@ export class automodCommand extends GirCommand {
   ) {
     const subCommand = interaction.options.getSubcommand();
 
-    const threshold = interaction.options.getNumber('threshold');
-    const duration = interaction.options.getNumber('duration');
-    const violations = interaction.options.getNumber('violations');
-    const add = interaction.options.getString('add');
-    const remove = interaction.options.getString('remove');
-    const action = interaction.options.getString('action');
+    // const threshold = interaction.options.getNumber('threshold');
+    // const duration = interaction.options.getNumber('duration');
+    // const violations = interaction.options.getNumber('violations');
+    // const add = interaction.options.getString('add');
+    // const remove = interaction.options.getString('remove');
+    // const action = interaction.options.getString('action');
+    const data = await automodSchema.findOne({ _id: interaction.guildId });
 
     if (interaction.options.getString('action') === ModActions.Mute) {
     }
     switch (subCommand) {
       case 'bannedwords':
-        await automodSchema.findOneAndUpdate(
-          {
-            _id: interaction.guildId,
-          },
-          {
-            bannedWords: {
-              enabled: true,
-              violations: violations ?? 3,
-              duration: duration ?? 300,
-              threshold: threshold ?? 60,
-              action: action ?? 'warn',
-              bannedWords: [],
-              ignoredChannels: [],
-              ignoredRoles: [],
-            },
-          },
-          {
-            upsert: true,
-            setDefaultsOnInsert: true,
-          }
-        );
-        const data = await automodSchema.findOne({
-          _id: interaction.guildId,
-        });
-
-        let automodData = data;
-        if (!automodData) {
-          automodData = await automodSchema.create({
-            _id: interaction.guildId,
-          });
-        }
-        let output: string = '';
-
-        if (add) {
-          await automodData?.updateOne(
-            { $push: { 'bannedWords.bannedWords': add } },
-            { upsert: true, setDefaultsOnInsert: true }
+        if (!data || !data?.bannedWords) {
+          await automodSchema.findOneAndUpdate(
+            { _id: interaction.guildId },
+            { _id: interaction.guildId },
+            { setDefaultsOnInsert: true }
           );
-          output += `\nAdded \`${add}\` to the list of banned words in the server`;
         }
 
-        if (remove) {
-          await automodData?.updateOne(
-            { $pull: { 'bannedWords.bannedWords': remove } },
-            { upsert: true, setDefaultsOnInsert: true }
-          );
-          output += `\nRemoved \`${remove}\` from the list of banned words in the server`;
-        }
-
-        if (threshold && duration && violations && action) {
-          await automodData?.updateOne(
-            {
-              $set: {
-                threshold: threshold,
-                duration: duration,
-                violations: violations,
-                action: action,
-              },
-            },
-            { upsert: true, setDefaultsOnInsert: true }
-          );
-
-          output += `\n\nA message will be counted as a violation if it has \`${threshold}%\` or more banned words`;
-          output += `\nThe bot will \`${capitalizeWords(
-            action
-          )}\` when someone has \`${violations}\` or more vaiolation in the last \`${ms(
-            duration * 1000
-          )}\``;
-        }
-
-        await automodData?.save();
-
-        interaction.reply(output);
         break;
 
       default:

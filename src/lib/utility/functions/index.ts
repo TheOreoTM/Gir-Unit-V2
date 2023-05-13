@@ -13,12 +13,24 @@ export { getAllFiles } from './getFiles';
 export { getSuccessLoggerData, logSuccessCommand } from './logSuccessCommand';
 export { mention } from './mention';
 export {
+  cast,
   cleanMentions,
   deleteMessage,
+  extractDetailedMentions,
+  fetchAvatar,
+  getAttachment,
+  getColor,
   getCommand,
+  getContent,
+  getDisplayAvatar,
+  getImage,
+  getImageUrl,
+  parseRange,
   promptForMessage,
+  radians,
   sendTemporaryMessage,
   setCommand,
+  validateChannelAccess,
 } from './messages';
 export { runAllChecks } from './modperms';
 export {
