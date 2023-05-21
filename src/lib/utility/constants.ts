@@ -23,6 +23,8 @@ export const CooldownFiltered = [...Owners];
 
 export const Prefix = '>';
 
+export const GirClientID = '679323237997608982';
+export const GirDevClientID = '730006258563940364';
 export const GirUsername = 'Gir-Unit';
 export const GirAvatar =
   'https://cdn.discordapp.com/attachments/1095696384348410007/1105191621525508146/gir-unit-avatar.png';

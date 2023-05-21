@@ -1,22 +1,33 @@
-import { LLRCData, LongLivingReactionCollector } from '#lib/';
 import { HungerGamesUsage } from '#lib/games/HungerGamesUsage';
+import hgMessages from '#lib/games/hungerGamesMessages';
 import { GirCommand } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
-import { deleteMessage, isModerator, minutes } from '#lib/utility';
-import { cleanMentions } from '#utils/util';
+import {
+  LLRCData,
+  LongLivingReactionCollector,
+  cleanMentions,
+  deleteMessage,
+  isModerator,
+  minutes,
+} from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { CommandOptionsRunTypeEnum } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { chunk, isFunction } from '@sapphire/utilities';
 import { PermissionFlagsBits } from 'discord-api-types/v9';
-import type { TFunction } from 'i18next';
 import { setTimeout as sleep } from 'node:timers/promises';
 
 @ApplyOptions<GirCommand.Options>({
   aliases: ['hunger-games', 'hg'],
-  description: LanguageKeys.Commands.Games.HungerGamesDescription,
-  detailedDescription: LanguageKeys.Commands.Games.HungerGamesExtended,
+  description: 'Play Hunger Games with your friends!',
+  detailedDescription: {
+    usages: ['User1 User2 User3...', '--autofill'],
+    extendedHelp: 'Enough discussion, let the games begin!',
+    examples: ['Katniss, Peeta, Clove, Cato, Johanna, Brutus, Blight'],
+    'reminder':
+      'You can specify `--autoskip` to automatically skip after some time.',
+  },
   flags: ['autofill', 'autoskip'],
   requiredClientPermissions: [
     PermissionFlagsBits.AddReactions,
@@ -34,8 +45,10 @@ export class UserCommand extends GirCommand {
     context: GirCommand.Context
   ) {
     const autoFilled = args.getFlags('autofill');
-    const tributes =
-      args.finished && autoFilled ? [] : args.nextSplit({ times: 50 });
+    const tributes: string[] =
+      args.finished && autoFilled
+        ? []
+        : await args.repeat('string', { times: 48 });
     const autoSkip = args.getFlags('autoskip');
 
     if (autoFilled) {
@@ -46,21 +59,20 @@ export class UserCommand extends GirCommand {
           tributes.push(author.username);
       }
     } else if (tributes.length === 0) {
-      this.error(LanguageKeys.Commands.Games.GamesNoPlayers, {
+      this.error('Please specify some tributes to play the Hunger Games.', {
         prefix: context.commandPrefix,
       });
     }
 
     const filtered = new Set(tributes);
     if (filtered.size !== tributes.length)
-      this.error(LanguageKeys.Commands.Games.GamesRepeat);
+      this.error('A user cannot play twice');
     if (this.playing.has(message.channel.id))
-      this.error(LanguageKeys.Commands.Games.GamesProgress);
+      this.error('There is already a game in progress in this channel');
     if (filtered.size < 4 || filtered.size > 48)
-      this.error(LanguageKeys.Commands.Games.GamesTooManyOrFew, {
-        min: 4,
-        max: 48,
-      });
+      this.error(
+        `I am sorry but the amount of players is less than 4 or greater than 48.`
+      );
     this.playing.add(message.channel.id);
 
     let resolve: ((value: boolean) => void) | null = null;
@@ -100,17 +112,17 @@ export class UserCommand extends GirCommand {
         // If it's not bloodbath and it became the day, increase the turn
         if (!game.bloodbath && game.sun) ++game.turn;
         const events = game.bloodbath
-          ? LanguageKeys.Commands.Games.HungerGamesBloodbath
+          ? hgMessages.hgBloodBath
           : game.sun
-          ? LanguageKeys.Commands.Games.HungerGamesDay
-          : LanguageKeys.Commands.Games.HungerGamesNight;
+          ? hgMessages.hgDay
+          : hgMessages.hgNight;
 
         // Main logic of the game
         const { results, deaths } = this.makeResultEvents(
           game,
-          args.t(events).map(HungerGamesUsage.create)
+          events.map(HungerGamesUsage.create)
         );
-        const texts = this.buildTexts(args.t, game, results, deaths);
+        const texts = this.buildTexts(game, results, deaths);
 
         // Ask for the user to proceed:
         for (const text of texts) {
@@ -130,7 +142,7 @@ export class UserCommand extends GirCommand {
           const verification = await new Promise<boolean>(async (res) => {
             resolve = res;
             if (autoSkip) {
-              await sleep((gameMessage!.content.length / 20) * 1000);
+              await sleep((gameMessage!.content.length / 15) * 1000);
               res(true);
             }
           });
@@ -139,9 +151,8 @@ export class UserCommand extends GirCommand {
           await deleteMessage(gameMessage);
           if (!verification) {
             if (canSendMessages(message.channel)) {
-              const content = args.t(
-                LanguageKeys.Commands.Games.HungerGamesStop
-              );
+              const content = `Game finished by choice`;
+
               await send(message, content);
             }
             return;
@@ -152,9 +163,10 @@ export class UserCommand extends GirCommand {
       }
 
       // The match finished with one remaining player
-      const content = args.t(LanguageKeys.Commands.Games.HungerGamesWinner, {
-        winner: game.tributes.values().next().value as string,
-      });
+      const content = `And the winner is... ${
+        game.tributes.values().next().value as string
+      }!`;
+
       await send(message, content);
     } catch (error) {
       throw error;
@@ -181,7 +193,7 @@ export class UserCommand extends GirCommand {
     // If the user who reacted is the author, don't inhibit
     if (reaction.userId === message.author.id) return false;
 
-    // Don't listen to herself
+    // Don't listen to itself
     if (reaction.userId === process.env.CLIENT_ID) return true;
 
     try {
@@ -195,24 +207,25 @@ export class UserCommand extends GirCommand {
   }
 
   private buildTexts(
-    t: TFunction,
     game: HungerGamesGame,
     results: string[],
     deaths: string[]
   ) {
     const headerKey = game.bloodbath
-      ? LanguageKeys.Commands.Games.HungerGamesResultHeaderBloodbath
+      ? `Bloodbath`
       : game.sun
-      ? LanguageKeys.Commands.Games.HungerGamesResultHeaderSun
-      : LanguageKeys.Commands.Games.HungerGamesResultHeaderMoon;
+      ? `Day ${game.turn}`
+      : `Night ${game.turn}`;
 
-    const header = t(headerKey, { game });
+    const header = headerKey;
     const death = deaths.length
-      ? `${t(LanguageKeys.Commands.Games.HungerGamesResultDeaths, {
-          count: deaths.length,
-        })}\n\n${deaths.map((d) => `- ${d}`).join('\n')}`
+      ? `**${deaths.length}** cannon ${
+          deaths.length > 1 ? 'shots' : 'shot'
+        } can be heard in the distance\n\n${deaths
+          .map((d) => `- ${d}`)
+          .join('\n')}`
       : '';
-    const proceed = t(LanguageKeys.Commands.Games.HungerGamesResultProceed);
+    const proceed = 'Proceed?';
     const panels = chunk(results, 5);
 
     const texts = panels.map(

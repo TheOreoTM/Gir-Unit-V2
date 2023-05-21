@@ -1,0 +1,78 @@
+import { FailEmbed, LoadingEmbed } from '#lib/structures';
+import { GirEvents } from '#lib/types';
+import { LongLivingReactionCollector } from '#lib/utility/LongLivingReactionCollector';
+import { send } from '@sapphire/plugin-editable-commands';
+import { chunk } from '@sapphire/utilities';
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  Message,
+} from 'discord.js';
+import type { BaseController } from './BaseController';
+import { BaseGame } from './BaseGame';
+
+export abstract class BaseReactionGame<T> extends BaseGame<T> {
+  public readonly reactions: readonly string[];
+  public readonly listener: LongLivingReactionCollector;
+  public readonly reactionTime: number;
+
+  public constructor(
+    message: Message,
+    playerA: BaseController<T>,
+    playerB: BaseController<T>,
+    reactions: readonly string[],
+    reactionTime: number,
+    turn = BaseGame.getTurn()
+  ) {
+    super(message, playerA, playerB, turn);
+    this.reactions = reactions;
+    this.reactionTime = reactionTime;
+    this.listener = new LongLivingReactionCollector();
+  }
+
+  protected async onStart(): Promise<unknown> {
+    try {
+      this.message = await send(this.message, {
+        embeds: [new LoadingEmbed('Setting up the game')],
+      });
+      let buttons: ButtonBuilder[] = [];
+      for (const reaction of this.reactions) await this.message.react(reaction);
+      for (const reaction of this.reactions)
+        buttons.push(
+          new ButtonBuilder()
+            .setEmoji(reaction)
+            .setStyle(ButtonStyle.Secondary)
+            .setCustomId(Math.random().toString())
+        );
+      const chunks = chunk(buttons, 3);
+      const rows: ActionRowBuilder<ButtonBuilder>[] = [];
+
+      for (const chunk of chunks) {
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          ...chunk
+        );
+        rows.push(row);
+      }
+
+      await this.message.edit({ components: rows });
+    } catch {
+      await send(this.message, {
+        embeds: [
+          new FailEmbed('Something went wrong while setting up the game'),
+        ],
+      }).catch((error) => this.client.emit(GirEvents.Error, error));
+    }
+
+    return super.onStart();
+  }
+
+  protected get finished(): boolean {
+    return this.listener.ended;
+  }
+
+  protected onEnd(): Promise<unknown> {
+    this.listener.end();
+    return super.onEnd();
+  }
+}

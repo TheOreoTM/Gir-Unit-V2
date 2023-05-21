@@ -6,4 +6,5 @@ export const GirEvents = {
   UserMessage: 'userMessage',
   GuildUserMessage: 'guildUserMessage',
   GuildMessageLog: 'guildMessageLog',
+  RawReactionAdd: 'rawReactionAdd',
 };

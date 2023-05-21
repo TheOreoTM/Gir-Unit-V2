@@ -16,7 +16,12 @@ import {
 } from 'discord.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 
-import { isNullishOrEmpty, Nullish, tryParseURL } from '@sapphire/utilities';
+import {
+  canReact,
+  canRemoveAllReactions,
+} from '@sapphire/discord.js-utilities';
+import { container } from '@sapphire/framework';
+import { Nullish, isNullishOrEmpty, tryParseURL } from '@sapphire/utilities';
 import { loadImage, type Image } from 'canvas-constructor/napi-rs';
 import type { APIUser } from 'discord-api-types/v9';
 import type {
@@ -104,29 +109,6 @@ export async function sendTemporaryMessage(
   // floatPromise(deleteMessage(response, timer)); // No need for this because when message gets deleted so does the command reponse
   floatPromise(deleteMessage(response, timer));
   return response;
-}
-
-/**
- * Sends a boolean confirmation prompt asking the `target` for either of two choices.
- * @param message The message to ask for a confirmation from.
- * @param options The options for the message to be sent, alongside the prompt options.
- * @returns `null` if no response was given within the requested time, `boolean` otherwise.
- */
-
-export async function promptForMessage(
-  message: Message,
-  sendOptions: string | MessageCreateOptions,
-  time = minutes(1)
-): Promise<string | null> {
-  const response = await message.channel.send(sendOptions);
-  const responses = await message.channel.awaitMessages({
-    filter: (msg) => msg.author === message.author,
-    time,
-    max: 1,
-  });
-  floatPromise(deleteMessage(response));
-
-  return responses.size === 0 ? null : responses.first()!.content;
 }
 
 /**
@@ -373,10 +355,6 @@ export interface DetailedMentionExtractionResult {
   parse: MessageMentionTypes[];
 }
 
-export function cast<T>(value: unknown): T {
-  return value as T;
-}
-
 /**
  * Validates that a user has VIEW_CHANNEL permissions to a channel
  * @param channel The TextChannel to check
@@ -412,4 +390,106 @@ export const random = (num: number) => Math.floor(Math.random() * num);
 
 export function getColor(message: Message) {
   return message.member?.displayColor ?? GirColors.Default;
+}
+
+export interface PromptConfirmationMessageOptions extends MessageCreateOptions {
+  /**
+   * The target.
+   * @default message.author
+   */
+  target?: UserResolvable;
+
+  /**
+   * The time for the confirmation to run.
+   * @default minutes(1)
+   */
+  time?: number;
+}
+
+const enum PromptConfirmationReactions {
+  Yes = '🇾',
+  No = '🇳',
+}
+
+async function promptConfirmationReaction(
+  message: Message,
+  response: Message,
+  options: PromptConfirmationMessageOptions
+) {
+  await response.react(PromptConfirmationReactions.Yes);
+  await response.react(PromptConfirmationReactions.No);
+
+  const target = container.client.users.resolveId(
+    options.target ?? message.author
+  )!;
+  const reactions = await response.awaitReactions({
+    filter: (__, user) => user.id === target,
+    time: minutes(1),
+    max: 1,
+  });
+
+  // Remove all reactions if the user has permissions to do so
+  if (canRemoveAllReactions(response.channel)) {
+    floatPromise(response.reactions.removeAll());
+  }
+
+  return reactions.size === 0
+    ? null
+    : reactions.firstKey() === PromptConfirmationReactions.Yes;
+}
+
+const promptConfirmationMessageRegExp = /^y|yes?|yeah?$/i;
+async function promptConfirmationMessage(
+  message: Message,
+  response: Message,
+  options: PromptConfirmationMessageOptions
+) {
+  const target = container.client.users.resolveId(
+    options.target ?? message.author
+  )!;
+  const messages = await response.channel.awaitMessages({
+    filter: (message) => message.author.id === target,
+    time: minutes(1),
+    max: 1,
+  });
+
+  return messages.size === 0
+    ? null
+    : promptConfirmationMessageRegExp.test(messages.first()!.content);
+}
+
+export async function promptConfirmation(
+  message: Message,
+  options: string | PromptConfirmationMessageOptions
+) {
+  if (typeof options === 'string') options = { content: options };
+
+  // TODO: v13 | Switch to buttons only when available.
+  const response = await send(message, options);
+  return canReact(response.channel)
+    ? promptConfirmationReaction(message, response, options)
+    : promptConfirmationMessage(message, response, options);
+}
+
+/**
+ * Sends a boolean confirmation prompt asking the `target` for either of two choices.
+ * @param message The message to ask for a confirmation from.
+ * @param options The options for the message to be sent, alongside the prompt options.
+ * @returns `null` if no response was given within the requested time, `boolean` otherwise.
+ */
+
+export async function promptForMessage(
+  message: Message,
+  sendOptions: string | MessageCreateOptions,
+  time = minutes(1)
+): Promise<string | null> {
+  const response = await message.channel.send(sendOptions);
+  const responses = await message.channel.awaitMessages({
+    filter: (msg) => msg.author === message.author,
+    time,
+    max: 1,
+  });
+  floatPromise(deleteMessage(response));
+
+  return responses.size === 0 ? null : responses.first()!.content;
 }

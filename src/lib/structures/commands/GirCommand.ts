@@ -8,6 +8,7 @@ import {
   WarnOptions,
   type GuildMessage,
 } from '#lib/types';
+import type { LongLivingReactionCollector } from '#lib/utility';
 import { seconds } from '#lib/utility';
 import {
   ApplicationCommandRegistry,
@@ -27,6 +28,7 @@ import {
   MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
   PermissionFlagsBits,
   PermissionsBitField,
+  User,
   UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction,
 } from 'discord.js';
 import type { Logging } from '../classes/Logging';
@@ -74,10 +76,10 @@ export abstract class GirCommand extends Command {
     return await this.container.client.fetchPrefix(message);
   }
 
-  protected error(identifier: string | UserError, context?: unknown): never {
-    throw typeof identifier === 'string'
-      ? new UserError({ identifier, context })
-      : identifier;
+  protected error(message: string | UserError, context?: unknown): never {
+    throw typeof message === 'string'
+      ? new UserError({ identifier: 'Error', message, context })
+      : message;
   }
 
   protected parseConstructorPreConditions(options: GirCommand.Options): void {
@@ -190,10 +192,15 @@ declare module '@sapphire/framework' {
     commandCategory: string;
     duration: number;
     commandName: GirCommand;
+    userName: User;
   }
 }
 
 declare module 'discord.js' {
+  interface Client {
+    readonly llrCollectors: Set<LongLivingReactionCollector>;
+  }
+
   interface Guild {
     settings: GuildSettings | null;
     logging: Logging | null;

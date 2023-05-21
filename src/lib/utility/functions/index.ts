@@ -2,6 +2,7 @@ export * from './case';
 export * from './checkModeratable';
 export * from './clean';
 export * from './countlines';
+export * from './emojis';
 export * from './formatter';
 export * from './genRandom';
 export * from './generateBar';

@@ -31,6 +31,8 @@ export const Presence = {
 export const config: Config = {
   default_prefix: Prefix,
   intents: [
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
