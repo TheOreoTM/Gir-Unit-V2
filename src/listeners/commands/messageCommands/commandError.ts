@@ -1,6 +1,6 @@
 import { FailEmbed } from '#lib/structures';
 import { GirEvents } from '#lib/types';
-import { format, sendTemporaryMessage } from '#lib/utility';
+import { formatRoles, sendTemporaryMessage } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import {
   Listener,
@@ -38,7 +38,7 @@ export class UserListener extends Listener {
         content = `This command can only be used in NSFW channels`;
       } else if (error.identifier === 'preconditionUserPermissions') {
         const { missing } = error.context as { missing: [] };
-        content = `You need \`${format(missing).join('` `')}\` permission${
+        content = `You need \`${formatRoles(missing).join('` `')}\` permission${
           missing.length - 1 === 0 ? '' : '(s)'
         } to run this command`;
       } else {

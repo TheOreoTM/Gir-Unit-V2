@@ -15,7 +15,7 @@ import {
   type PresenceData,
 } from 'discord.js';
 import 'dotenv/config';
-import { sec } from './functions';
+import { seconds } from './common';
 
 export const Token = process.env.TOKEN;
 
@@ -38,7 +38,7 @@ export const config: Config = {
     GatewayIntentBits.GuildMembers,
   ],
   cooldown_options: {
-    delay: sec(5),
+    delay: seconds(5),
     filteredUsers: CooldownFiltered,
     scope: BucketScope.User,
   },

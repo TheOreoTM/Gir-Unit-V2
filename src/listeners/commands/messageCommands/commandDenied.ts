@@ -1,5 +1,5 @@
 import { FailEmbed } from '#lib/structures';
-import { format, sendTemporaryMessage } from '#lib/utility';
+import { formatRoles, sendTemporaryMessage } from '#lib/utility';
 import {
   Listener,
   UserError,
@@ -44,7 +44,7 @@ export class CommandDenied extends Listener {
     } else if (error.identifier === 'preconditionUserPermissions') {
       const { missing } = error.context as { missing: [] };
       return await sendTemporaryMessage(message, {
-        content: `You need \`${format(missing).join('` `')}\` permission${
+        content: `You need \`${formatRoles(missing).join('` `')}\` permission${
           missing.length - 1 === 0 ? '' : '(s)'
         } to run this command`,
       });

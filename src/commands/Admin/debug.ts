@@ -11,7 +11,7 @@ import {
   LoadingEmbed,
   SuccessEmbed,
 } from '#lib/structures';
-import { mention, sec } from '#lib/utility';
+import { formatRoles, mention, seconds } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
 import { send, track } from '@sapphire/plugin-editable-commands';
@@ -20,7 +20,7 @@ import { ChannelType, PermissionFlagsBits, type Guild } from 'discord.js';
 @ApplyOptions<GirCommand.Options>({
   description: 'A basic command',
   name: 'debug',
-  cooldownDelay: sec(20),
+  cooldownDelay: seconds(20),
   cooldownScope: BucketScope.Guild,
 })
 export class debugCommand extends GirCommand {
@@ -169,9 +169,9 @@ export class debugCommand extends GirCommand {
       message.guild.members.me ??
       (await message.guild.members.fetch(message.client.user.id));
     notes.push(
-      ...this.container.utils
-        .format(me.permissions.missing(RecommendedPermissions))
-        .map((p) => this.note(p))
+      ...formatRoles(me.permissions.missing(RecommendedPermissions)).map((p) =>
+        this.note(p)
+      )
     );
 
     if (!notes.length)
@@ -260,9 +260,9 @@ export class debugCommand extends GirCommand {
 
     for (const channel of channels.values()) {
       const perm = channel.permissionsFor(me);
-      const missing = this.container.utils
-        .format(perm.missing(RecommendedPermissionsWithoutAdmin))
-        .map((c) => `\`${c}\``);
+      const missing = formatRoles(
+        perm.missing(RecommendedPermissionsWithoutAdmin)
+      ).map((c) => `\`${c}\``);
       if (missing.length) {
         notes.push(
           this.note(

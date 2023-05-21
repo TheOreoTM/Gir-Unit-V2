@@ -1,14 +1,13 @@
 import type { BasePetStat, PetStatType } from '#lib/types';
-import { capitalizeWords } from '#lib/utility';
+import { capitalizeWords, genRandomInt } from '#lib/utility';
 import { PetData } from '#lib/utility/pet';
-import { container } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import type { Types } from 'mongoose';
 import petSchema from '../schemas/pet-schema';
 import petUserSchema from '../schemas/petUser-schema';
 
 const generateIv = () => {
-  return container.utils.genRandomInt(0, 31) as number;
+  return genRandomInt(0, 31) as number;
 };
 
 const calculateStat = (pet: Pet, stat: PetStatType): number => {

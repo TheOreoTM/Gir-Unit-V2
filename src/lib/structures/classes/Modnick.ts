@@ -44,7 +44,7 @@ export class Modnick {
       action: 'modnick',
       member: member,
       staff: staff,
-      reason: `Nickname changed to \`${identifier}\``,
+      reason: `Nickname moderated to \`${identifier}\``,
     };
     const log = new Modlog(modlogData);
     await log.create();

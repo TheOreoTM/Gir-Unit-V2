@@ -17,7 +17,14 @@ export class commandCategoryArgument extends Argument {
       });
     }
 
-    const validCategories = ['admin', 'general', 'misc', 'moderation', 'pet'];
+    const validCategories = [
+      'admin',
+      'general',
+      'misc',
+      'moderation',
+      'pet',
+      'games',
+    ];
 
     if (!validCategories.includes(commandCategory)) {
       return this.error({

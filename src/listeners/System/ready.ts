@@ -1,5 +1,5 @@
 import type { GirClient } from '#lib/GirClient';
-import { GuildSettings, Modnick, Utils } from '#lib/structures';
+import { GuildSettings, Modnick } from '#lib/structures';
 import { Automod } from '#lib/structures/classes/Automod';
 import { Logging } from '#lib/structures/classes/Logging';
 import { GirEvents } from '#lib/types';
@@ -23,8 +23,6 @@ import gradient from 'gradient-string';
 })
 export class UserListener extends Listener {
   public override run(client: GirClient) {
-    this.container.utils = new Utils(client);
-
     this.container.client = client;
     this.container.logger.info(`Logged in as ${client.user!.username}`);
     this.printBanner();

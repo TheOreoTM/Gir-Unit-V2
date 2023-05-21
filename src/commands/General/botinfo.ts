@@ -12,7 +12,7 @@ import { uptime } from 'node:os';
   name: 'botinfo',
   detailedDescription: {
     examples: ['botinfo'],
-    usage: 'botinfo',
+    usages: ['botinfo'],
   },
 })
 export class UserCommand extends GirCommand {

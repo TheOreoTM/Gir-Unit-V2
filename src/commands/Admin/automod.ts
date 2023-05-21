@@ -1,7 +1,7 @@
 import { GirCommand } from '#lib/structures';
 import automodSchema from '#lib/structures/schemas/automod-schema,';
 import { ModActions } from '#lib/types';
-import { days, hours, mins } from '#lib/utility';
+import { days, hours, minutes } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 // import { ms } from 'enhanced-ms';
 
@@ -9,7 +9,7 @@ import { ApplyOptions } from '@sapphire/decorators';
   description: 'Update the automod settings of the server',
   name: 'automod',
   detailedDescription: {
-    usage: '/automod',
+    usages: ['/automod'],
     examples: ["/automod bannedwords add: 'loser'"],
   },
 })
@@ -118,11 +118,11 @@ export class automodCommand extends GirCommand {
                   )
                   .setChoices(
                     { name: 'Permanent', value: `0` },
-                    { name: '1 minute', value: `${mins(1)}` },
-                    { name: '5 minutes', value: `${mins(5)}` },
-                    { name: '10 minutes', value: `${mins(10)}` },
-                    { name: '20 minutes', value: `${mins(20)}` },
-                    { name: '30 minutes', value: `${mins(30)}` },
+                    { name: '1 minute', value: `${minutes(1)}` },
+                    { name: '5 minutes', value: `${minutes(5)}` },
+                    { name: '10 minutes', value: `${minutes(10)}` },
+                    { name: '20 minutes', value: `${minutes(20)}` },
+                    { name: '30 minutes', value: `${minutes(30)}` },
                     { name: '1 hour', value: `${hours(1)}` },
                     { name: '2 hours', value: `${hours(2)}` },
                     { name: '4 hours', value: `${hours(4)}` },

@@ -51,7 +51,7 @@ export function formatName(pet: Pet, spec: string) {
  * @example
  * format(['SEND_MESSAGES']) -> ['Send Messages']
  */
-export function format(perm: PermissionsString[], key?: boolean): string[];
+export function formatRoles(perm: PermissionsString[], key?: boolean): string[];
 /**
  * It takes a string of screaming snake case and returns pascal case
  * @param {string} perm The permission string
@@ -59,9 +59,9 @@ export function format(perm: PermissionsString[], key?: boolean): string[];
  * @example
  * format('SEND_MESSAGES') -> 'Send Messages'
  */
-export function format(perm: string): string;
+export function formatRoles(perm: string): string;
 
-export function format(perm: PermissionsString[] | string, key = true) {
+export function formatRoles(perm: PermissionsString[] | string, key = true) {
   if (Array.isArray(perm)) {
     return perm
       .sort((a, b) => order[b] - order[a])

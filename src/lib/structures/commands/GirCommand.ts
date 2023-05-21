@@ -8,7 +8,7 @@ import {
   WarnOptions,
   type GuildMessage,
 } from '#lib/types';
-import { sec } from '#lib/utility';
+import { seconds } from '#lib/utility';
 import {
   ApplicationCommandRegistry,
   Command,
@@ -159,7 +159,7 @@ export namespace GirCommand {
   export type MessageContextMenuCommandInteraction =
     MessageCTXCommandInteraction<'cached'>;
   export type AutoComplete = AutocompleteInteraction;
-  export type Context = Command.Context;
+  export type Context = MessageCommandContext;
 
   export type Args = SapphireArgs;
   export type Message = GuildMessage;
@@ -179,13 +179,17 @@ declare module '@sapphire/framework' {
     Community: never;
   }
   export interface DetailedDescriptionCommand {
-    usage: string;
-    examples: string[];
-    extendedHelp?: boolean;
+    usages?: string[];
+    extendedHelp?: string;
+    explainedUsage?: [string, string][];
+    possibleFormats?: [string, string][];
+    examples?: (null | string)[];
+    reminder?: string;
   }
   interface ArgType {
     commandCategory: string;
     duration: number;
+    commandName: GirCommand;
   }
 }
 
@@ -242,7 +246,7 @@ GuildMember.prototype.addHeat = async function (
     memberId: this.id,
     guildId: this.guild.id,
     rule: rule,
-    expiresAt: new Date(Date.now() + sec(expiresAfterSeconds)),
+    expiresAt: new Date(Date.now() + seconds(expiresAfterSeconds)),
   });
   return this;
 };

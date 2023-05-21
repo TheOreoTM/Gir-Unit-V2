@@ -18,7 +18,7 @@ import { EmbedBuilder } from 'discord.js';
   permissionLevel: PermissionLevels.Trainee,
   detailedDescription: {
     examples: ['modlogs', 'modlogs @Oreo'],
-    usage: 'modlogs [user?]',
+    usages: ['modlogs [user?]'],
   },
 })
 export class warningsCommand extends GirCommand {

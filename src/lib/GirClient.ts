@@ -1,20 +1,25 @@
 import { ClientConfig, MongoURI } from '#config';
 import { Prefix } from '#constants';
+import { Enumerable } from '@sapphire/decorators';
 import {
   SapphireClient,
   SapphirePrefix,
   SapphirePrefixHook,
+  container,
 } from '@sapphire/framework';
 import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-subcommands/register';
 import type { Message } from 'discord.js';
-import type { Utils } from './structures';
+import mongoose from 'mongoose';
 import prefixSchema from './structures/schemas/prefix-schema';
-import { connectToMongo } from './utility';
+import type { LongLivingReactionCollector } from './utility/LongLivingReactionCollector';
 
 export class GirClient<
   Ready extends boolean = boolean
 > extends SapphireClient<Ready> {
+  @Enumerable(false)
+  public llrCollectors = new Set<LongLivingReactionCollector>();
+
   public constructor() {
     super(ClientConfig);
   }
@@ -36,8 +41,16 @@ export class GirClient<
   };
 }
 
-declare module '@sapphire/pieces' {
-  interface Container {
-    utils: Utils;
-  }
+async function connectToMongo(URI: string) {
+  mongoose.set('strictQuery', true);
+  await mongoose
+    .connect(URI, {
+      keepAlive: true,
+    })
+    .then(() => {
+      container.logger.info('Mongoose connected!');
+    })
+    .catch((err) => {
+      container.logger.fatal('Mongoose failed to connect', err);
+    });
 }

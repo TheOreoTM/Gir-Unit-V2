@@ -1,6 +1,11 @@
 import { GirColors, ZeroWidthSpace } from '#constants';
 import type { GirCommand } from '#lib/structures';
-import { floatPromise, mins, resolveOnErrorCodes, sec } from '#lib/utility';
+import {
+  floatPromise,
+  minutes,
+  resolveOnErrorCodes,
+  seconds,
+} from '#lib/utility';
 import { send } from '@sapphire/plugin-editable-commands';
 import { RESTJSONErrorCodes } from 'discord-api-types/v9';
 import {
@@ -91,7 +96,7 @@ export async function deleteMessage(
 export async function sendTemporaryMessage(
   message: Message,
   options: string | MessageCreateOptions,
-  timer = sec(8)
+  timer = seconds(8)
 ): Promise<Message> {
   if (typeof options === 'string') options = { content: options };
 
@@ -111,7 +116,7 @@ export async function sendTemporaryMessage(
 export async function promptForMessage(
   message: Message,
   sendOptions: string | MessageCreateOptions,
-  time = mins(1)
+  time = minutes(1)
 ): Promise<string | null> {
   const response = await message.channel.send(sendOptions);
   const responses = await message.channel.awaitMessages({

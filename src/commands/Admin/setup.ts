@@ -14,7 +14,7 @@ import {
   name: 'setup',
   requiredClientPermissions: ['ManageWebhooks'],
   detailedDescription: {
-    usage: '/setup',
+    usages: ['/setup'],
     examples: ['/setup'],
   },
 })
