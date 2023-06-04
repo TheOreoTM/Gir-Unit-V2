@@ -1,8 +1,16 @@
 // import type { GuildSettings } from '#lib/structures';
 // import type { GuildMessage } from '#lib/types';
-import { GuildSettings, Mute, Warn } from '#lib/structures';
+import { GirColors } from '#constants';
+import {
+  DefaultEmbed,
+  GuildSettings,
+  Modlog,
+  Mute,
+  Warn,
+} from '#lib/structures';
 import {
   AutomodRule,
+  ModerationActionSendOptions,
   MuteOptions,
   PermissionLevels,
   WarnOptions,
@@ -31,6 +39,7 @@ import {
   User,
   UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction,
 } from 'discord.js';
+import ms from 'enhanced-ms';
 import type { Logging } from '../classes/Logging';
 import heatSchema from '../schemas/heat-schema';
 export abstract class GirCommand extends Command {
@@ -206,8 +215,15 @@ declare module 'discord.js' {
     logging: Logging | null;
   }
   interface GuildMember {
-    warn(options: WarnOptions): Promise<GuildMember>;
-    mute(duration: number | null, options: MuteOptions): Promise<GuildMember>;
+    warn(
+      options: WarnOptions,
+      sendOptions: ModerationActionSendOptions
+    ): Promise<Modlog>;
+    mute(
+      duration: number | null,
+      options: MuteOptions,
+      sendOptions: ModerationActionSendOptions
+    ): Promise<Mute>;
     addHeat(
       rule: AutomodRule,
       expiresAfterSeconds: number
@@ -259,17 +275,37 @@ GuildMember.prototype.addHeat = async function (
 };
 
 GuildMember.prototype.warn = async function (
-  options: WarnOptions
-): Promise<GuildMember> {
+  options: WarnOptions,
+  sendOptions: ModerationActionSendOptions
+): Promise<Modlog> {
   const warn = new Warn(this, options.staff, options.reason);
-  await warn.generateModlog(this.guild);
-  return this;
+  const modlog = await warn.generateModlog(this.guild);
+  try {
+    if (sendOptions.send) {
+      let Embed = new DefaultEmbed(
+        `You have been warned in ${this.guild.name} for: ${options.reason}`
+      ).setColor(GirColors.Fail);
+      if (sendOptions.moderator) {
+        const moderator = sendOptions.moderator;
+        Embed.setAuthor({
+          name: moderator.user.username,
+          iconURL: moderator.displayAvatarURL({
+            forceStatic: true,
+            extension: 'png',
+          }),
+        });
+      }
+      await this.send({ embeds: [Embed] });
+    }
+  } catch (error) {}
+  return modlog;
 };
 
 GuildMember.prototype.mute = async function (
   duration: number | null,
-  options: MuteOptions
-): Promise<GuildMember> {
+  options: MuteOptions,
+  sendOptions: ModerationActionSendOptions
+): Promise<Mute> {
   const mute = new Mute({
     target: this,
     staff: options.staff,
@@ -277,5 +313,25 @@ GuildMember.prototype.mute = async function (
     duration: duration,
   });
   await mute.create();
-  return this;
+  try {
+    if (sendOptions.send) {
+      let Embed = new DefaultEmbed(
+        `You have been muted in ${this.guild.name} ${
+          duration ? `for ${ms(duration)}` : ''
+        } for reason: ${options.reason}`
+      ).setColor(GirColors.Fail);
+      if (sendOptions.moderator) {
+        const moderator = sendOptions.moderator;
+        Embed.setAuthor({
+          name: moderator.user.username,
+          iconURL: moderator.displayAvatarURL({
+            forceStatic: true,
+            extension: 'png',
+          }),
+        });
+      }
+      await this.send({ embeds: [Embed] });
+    }
+  } catch (error) {}
+  return mute;
 };

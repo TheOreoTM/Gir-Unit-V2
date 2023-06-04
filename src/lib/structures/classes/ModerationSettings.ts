@@ -23,7 +23,7 @@ export class ModerationSettings {
       const data = await moderationSettingsSchema.findOne({
         _id: this.guild.id,
       });
-      return data?.dm ?? false;
+      return data?.dm ?? true;
     })();
   }
 
@@ -32,7 +32,7 @@ export class ModerationSettings {
       const data = await moderationSettingsSchema.findOne({
         _id: this.guild.id,
       });
-      return data?.displayName ?? false;
+      return data?.displayName ?? true;
     })();
   }
 
@@ -50,7 +50,7 @@ export class ModerationSettings {
       const data = await moderationSettingsSchema.findOne({
         _id: this.guild.id,
       });
-      return data?.messageDisplay ?? false;
+      return data?.messageDisplay ?? true;
     })();
   }
 
@@ -59,7 +59,7 @@ export class ModerationSettings {
       const data = await moderationSettingsSchema.findOne({
         _id: this.guild.id,
       });
-      return data?.reasonDisplay ?? false;
+      return data?.reasonDisplay ?? true;
     })();
   }
 }

@@ -41,6 +41,13 @@ export const enum GirEmojis {
   Forward = '⏩',
   Backward = '⏪',
   Stop = '⏹️',
+  C4Empty = '<:c4empty:1109863756638474351>',
+  C4PlayerOne = '<:c4one:1109863872569032704>',
+  C4WinnerOne = '<:c4onewin:1109864001963303033>',
+  C4PlayerTwo = '<:c4two:1109863929838047273>',
+  C4WinnerTwo = '<:c4twowin:1109864141713313872>',
+  On = '<:on:1111978402405175376>',
+  Off = '<:off:1111978397585907732>',
 }
 
 export const enum GirColors {

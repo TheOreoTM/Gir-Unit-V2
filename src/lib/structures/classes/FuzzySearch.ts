@@ -8,6 +8,6 @@ export class FuzzySearch {
   }
 
   public search(query: string, limit: number = 10) {
-    return go(query, this.data, { limit: limit });
+    return go(query, this.data, { limit: limit, threshold: -Infinity });
   }
 }

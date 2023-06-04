@@ -36,7 +36,11 @@ export class muteCommand extends GirCommand {
     }
 
     await target
-      .mute(duration, { staff: message.member, reason: reason })
+      .mute(
+        duration,
+        { staff: message.member, reason: reason },
+        { moderator: message.member, send: true }
+      )
       .catch(async (err) => {
         return await message.channel.send({ embeds: [new FailEmbed(err)] });
       });

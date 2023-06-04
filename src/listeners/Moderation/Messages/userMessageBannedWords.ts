@@ -1,6 +1,6 @@
 import { GirColors } from '#constants';
 import { ModerationMessageListener } from '#lib/structures';
-import type { GuildMessage } from '#lib/types';
+import type { BannedWordData, GuildMessage } from '#lib/types';
 import { deleteMessage, getContent, sendTemporaryMessage } from '#lib/utility';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder, TextChannel } from 'discord.js';
@@ -14,12 +14,15 @@ export class UserEvent extends ModerationMessageListener {
     const words = getContent(message);
     if (!words) return;
     const bannedWords =
-      (await message.guild.automod?.getSettings('bannedWords'))?.bannedWords ??
-      [];
+      (
+        (await message.guild.automod?.getSettings(
+          'bannedWords'
+        )) as BannedWordData
+      ).bannedWords ?? [];
 
     const hasBannedWord = words
       .split(' ')
-      .some((word) => bannedWords.includes(word));
+      .some((word) => bannedWords.has(word));
 
     return hasBannedWord ? true : null;
   }

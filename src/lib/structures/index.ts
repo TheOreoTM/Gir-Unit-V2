@@ -1,5 +1,4 @@
 export * from './classes/index';
-export * from './commands/GirCommand';
-export * from './commands/GirSubcommand';
+export * from './commands/index';
 export * from './events/index';
 export * from './preconditions/index';

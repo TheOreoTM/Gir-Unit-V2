@@ -2,13 +2,7 @@ import { FailEmbed, LoadingEmbed } from '#lib/structures';
 import { GirEvents } from '#lib/types';
 import { LongLivingReactionCollector } from '#lib/utility/LongLivingReactionCollector';
 import { send } from '@sapphire/plugin-editable-commands';
-import { chunk } from '@sapphire/utilities';
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  Message,
-} from 'discord.js';
+import type { Message } from 'discord.js';
 import type { BaseController } from './BaseController';
 import { BaseGame } from './BaseGame';
 
@@ -36,26 +30,26 @@ export abstract class BaseReactionGame<T> extends BaseGame<T> {
       this.message = await send(this.message, {
         embeds: [new LoadingEmbed('Setting up the game')],
       });
-      let buttons: ButtonBuilder[] = [];
       for (const reaction of this.reactions) await this.message.react(reaction);
-      for (const reaction of this.reactions)
-        buttons.push(
-          new ButtonBuilder()
-            .setEmoji(reaction)
-            .setStyle(ButtonStyle.Secondary)
-            .setCustomId(Math.random().toString())
-        );
-      const chunks = chunk(buttons, 3);
-      const rows: ActionRowBuilder<ButtonBuilder>[] = [];
+      // let buttons: ButtonBuilder[] = [];
+      // for (const reaction of this.reactions)
+      //   buttons.push(
+      //     new ButtonBuilder()
+      //       .setEmoji(reaction)
+      //       .setStyle(ButtonStyle.Secondary)
+      //       .setCustomId(Math.random().toString())
+      //   );
+      // const chunks = chunk(buttons, 3);
+      // const rows: ActionRowBuilder<ButtonBuilder>[] = [];
 
-      for (const chunk of chunks) {
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-          ...chunk
-        );
-        rows.push(row);
-      }
-
-      await this.message.edit({ components: rows });
+      // for (const chunk of chunks) {
+      //   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      //     ...chunk
+      //   );
+      //   rows.push(row);
+      // }
+      //
+      // await this.message.edit({ components: rows });
     } catch {
       await send(this.message, {
         embeds: [

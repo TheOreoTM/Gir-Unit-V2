@@ -13,10 +13,14 @@ export class Warn {
   userName: string;
   staffId: string;
   staffName: string;
-  reason: string;
+  reason: string | null;
   caseNum: string;
 
-  public constructor(member: GuildMember, mod: GuildMember, reason?: string) {
+  public constructor(
+    member: GuildMember,
+    mod: GuildMember,
+    reason: string | null
+  ) {
     // (this.member = member), (this.staff = mod);
     const guildId = member.guild.id || member.id;
     this.guildId = guildId;

@@ -60,7 +60,12 @@ export interface TaskOptions {
 
 export interface WarnOptions {
   staff: GuildMember;
-  reason: string;
+  reason: string | null;
+}
+
+export interface ModerationActionSendOptions {
+  moderator: GuildMember | null;
+  send: boolean;
 }
 
 export interface MuteOptions {
@@ -76,7 +81,7 @@ export interface ModlogData {
   member: GuildMember;
   staff: GuildMember;
   action: ModAction;
-  reason: string;
+  reason: string | null;
   length?: number | null;
 }
 

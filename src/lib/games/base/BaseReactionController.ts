@@ -1,4 +1,3 @@
-import { api } from '#lib/discord/Api';
 import { GirEvents } from '#lib/types';
 import type { LLRCData } from '#lib/utility/LongLivingReactionCollector';
 import { getEmojiString } from '#lib/utility/functions';
@@ -57,11 +56,16 @@ export abstract class BaseReactionController<T> extends BaseController<T> {
     userId: string
   ): Promise<void> {
     try {
-      await api()
-        .channels(reaction.channel.id)
-        .messages(reaction.messageId)
-        .reactions(emoji)(userId)
-        .delete();
+      emoji;
+      const reactionMessage = await reaction.channel.messages.fetch(
+        reaction.messageId
+      );
+      const userReactions = reactionMessage.reactions.cache.filter((reaction) =>
+        reaction.users.cache.has(userId)
+      );
+      for (const reaction of userReactions.values()) {
+        await reaction.users.remove(userId);
+      }
     } catch (error) {
       if (error instanceof DiscordAPIError) {
         if (

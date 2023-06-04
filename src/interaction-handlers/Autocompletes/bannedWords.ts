@@ -1,4 +1,5 @@
 import { FuzzySearch } from '#lib/structures';
+import type { BannedWordData } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
 import {
   InteractionHandler,
@@ -28,15 +29,14 @@ export class AutocompleteHandler extends InteractionHandler {
     // Ensure that the option name is one that can be autocompleted, or return none if not.
     switch (focusedOption.name) {
       case 'remove': {
-        const data = await interaction.guild?.automod?.getSettings(
+        const data = (await interaction.guild?.automod?.getSettings(
           'bannedWords'
-        );
+        )) as BannedWordData;
 
         const bannedWords = data?.bannedWords ?? [];
+        const words = Array.from(bannedWords.keys());
 
-        const searchResult = new FuzzySearch(bannedWords).search(
-          focusedOption.value
-        );
+        const searchResult = new FuzzySearch(words).search(focusedOption.value);
         // Map the search results to the structure required for Autocomplete
         return this.some(
           searchResult.map((match) => ({

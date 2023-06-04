@@ -66,18 +66,18 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
     preProcessed: T
   ) {
     await message.member.addHeat(this.rule, settings.duration);
-    if (message.deletable && settings.delete) {
+    if (message.deletable && settings.shouldDelete) {
       floatPromise(this.onDelete(message, preProcessed) as any);
     }
 
-    if (canSendMessages(message.channel) && settings.alert) {
+    if (canSendMessages(message.channel) && settings.shouldAlert) {
       floatPromise(this.onAlert(message, preProcessed) as any);
     }
 
     const webhook: WebhookClient | Nullish = await message.guild.logging
       ?.automod;
 
-    if (webhook && settings.log) {
+    if (webhook && settings.shouldLog) {
       floatPromise(this.onLog(message, webhook, preProcessed) as any);
     }
   }
@@ -109,10 +109,13 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
   protected async onWarning(message: GuildMessage) {
     const staff =
       message.guild.members.me ?? (await message.guild.members.fetchMe());
-    await message.member.warn({
-      reason: this.reason,
-      staff: staff,
-    });
+    await message.member.warn(
+      {
+        reason: this.reason,
+        staff: staff,
+      },
+      { moderator: message.member, send: true }
+    );
   }
 
   protected async onKick(message: GuildMessage) {
@@ -136,10 +139,14 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
   protected async onMute(message: GuildMessage, duration: number = NaN) {
     const staff =
       message.guild.members.me ?? (await message.guild.members.fetchMe());
-    await message.member.mute(duration, {
-      reason: this.reason,
-      staff: staff,
-    });
+    await message.member.mute(
+      duration,
+      {
+        reason: this.reason,
+        staff: staff,
+      },
+      { moderator: message.member, send: true }
+    );
   }
 
   protected async onBan(message: GuildMessage, duration: number = NaN) {

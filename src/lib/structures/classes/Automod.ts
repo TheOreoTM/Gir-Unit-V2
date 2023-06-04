@@ -1,4 +1,9 @@
-import type { AutomodData, AutomodRule, BannedWordData } from '#lib/types';
+import type {
+  AutomodData,
+  AutomodRule,
+  BannedWordData,
+  LinkData,
+} from '#lib/types';
 import type { Guild } from 'discord.js';
 import automodSchema from '../schemas/automod-schema,';
 
@@ -7,7 +12,9 @@ export class Automod {
     this.guild = guild;
   }
 
-  public async getSettings(rule: AutomodRule): Promise<AutomodData | null> {
+  public async getSettings(
+    rule: AutomodRule
+  ): Promise<BannedWordData | LinkData | null> {
     let data: AutomodData | null = null;
     const automod = await automodSchema.findOne({ _id: this.guild.id });
     if (!automod) return null;
